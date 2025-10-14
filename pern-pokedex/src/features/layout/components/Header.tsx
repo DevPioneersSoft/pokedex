@@ -1,5 +1,6 @@
 import { Button } from "@mantine/core";
 import Sesion from "./Sesion";
+import ButtonCustom from "./ButtonCustom";
 
 export default function Header() {
     return (
@@ -15,9 +16,13 @@ export default function Header() {
                     <div className="grow">
                         <div className="flex space-x-10">
                             <div>
-                                <Button color="yellow">
-                                    Mi equipo
-                                </Button>
+                                <ButtonCustom
+                                    label="Mi equipo"
+                                    color="warning"
+                                    className="ml-10"
+                                    isLoading={true}
+
+                                />
                             </div>
                             <div className="flex space-x-4">
 
