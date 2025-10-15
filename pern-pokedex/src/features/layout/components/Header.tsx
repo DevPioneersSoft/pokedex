@@ -1,4 +1,3 @@
-import { Button } from "@mantine/core";
 import Sesion from "./Sesion";
 import ButtonCustom from "./ButtonCustom";
 
@@ -20,7 +19,6 @@ export default function Header() {
                                     label="Mi equipo"
                                     color="warning"
                                     className="ml-10"
-                                    isLoading={true}
 
                                 />
                             </div>
