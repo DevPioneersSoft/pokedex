@@ -3,6 +3,8 @@ export interface PokemonSimple {
   name: string;
   base_image?: string;
   artwork_url: string;
+  vida?: number;
+  vidaActual?: number;
 }
 
 export const pokemonDummies: PokemonSimple[] = [

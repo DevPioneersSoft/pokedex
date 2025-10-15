@@ -13,6 +13,7 @@ export default function Cuadricula() {
     >
       {pokemonDummies.map((pokemon, index) => (
         <CardPokemon
+          key={index}
           id={index}
           name={pokemon.name}
           artwork_url={pokemon.artwork_url}
