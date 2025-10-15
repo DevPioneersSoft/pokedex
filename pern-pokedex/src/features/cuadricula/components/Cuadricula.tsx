@@ -1,14 +1,23 @@
-export default function Saludo(props: {
-  children?: React.ReactNode;
-  nombre: React.ReactNode;
-  apellido?: string;
-}) {
+import { pokemonDummies } from "./pokemon.dummy";
+import "./cuadricula.css";
+import CardPokemon from "./CardPokemon";
+
+export default function Cuadricula() {
   return (
-    <>
-      <h1>
-        Hola, {props.nombre}
-        {props.children && <span>"Texto validado "{props.children}</span>}!
-      </h1>
-    </>
+    <div
+      className="grid 
+                  gap-3 
+                  [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] 
+                  rounded-2xl 
+                  p-6"
+    >
+      {pokemonDummies.map((pokemon, index) => (
+        <CardPokemon
+          id={index}
+          name={pokemon.name}
+          artwork_url={pokemon.artwork_url}
+        />
+      ))}
+    </div>
   );
 }
