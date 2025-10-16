@@ -3,6 +3,7 @@
 // import EjemploUseEffect from "./features/ejemplosHooks/EjemploUseEffect";
 // import HookUseState from "./features/ejemplosHooks/EjemploUseState";
 
+
 import { EjemploUseReducer } from "./features/ejemplosHooks/EjemploUseReducer";
 import Header from "./features/layout/components/Header";
 // import { useState } from "react";
@@ -25,7 +26,9 @@ function App() {
           onChange={setTipo}
         /> */}
         {/* <EjemploUseEffect tipo={tipo ?? ""} /> */}
+
         <EjemploUseReducer />
+
       </div>
     </>
   );
