@@ -1,10 +1,10 @@
 import { useReducer } from "react";
-import { pokemonDummies } from "../cuadricula/components/pokemon.dummy";
+import { pokemonDummies } from "../layout/components/pokemon.dummy";
 import {
   equipoReducer,
   estadoInicial,
   type PokemonReducer,
-} from "./reducers/equipoReducer";
+} from "./reducers/equipoReducers";
 
 export function EjemploUseReducer() {
   const [state, dispatch] = useReducer(equipoReducer, estadoInicial);

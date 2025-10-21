@@ -1,7 +1,7 @@
 @import "tailwindcss";
 
-@theme {
-
+@theme{
+  /* Primary - Rojo Pokemon */
   --color-primary-50: #fdeceb;
   --color-primary-100: #f9c6c2;
   --color-primary-200: #f49996;
@@ -23,7 +23,7 @@
   --color-secondary-700: #21396a;
   --color-secondary-800: #152141;
   --color-secondary-900: #0a0a19;
-
+  
   /* Warning - Amarillo Pikachu */
   --color-warning-100: #fff9e0;
   --color-warning-200: #fff3c2;
@@ -46,7 +46,6 @@
   --color-info-800: #0c3347;
   --color-info-900: #061924;
 
-
   /* Danger - Negro/rojo Team Rocket */
   --color-danger-100: #fce5e5;
   --color-danger-200: #f8baba;
@@ -57,6 +56,4 @@
   --color-danger-700: #761e1e;
   --color-danger-800: #4d1313;
   --color-danger-900: #260909;
-
-
 }
