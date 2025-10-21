@@ -2,7 +2,11 @@ import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
-export default function Cuadricula() {
+interface CuadriculaProps {
+  callback?: (pokemon: Pokemon) => void
+}
+
+export default function Cuadricula({ callback }: CuadriculaProps) {
   const {
     pokemones,
     isLoading,
@@ -14,21 +18,24 @@ export default function Cuadricula() {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 3, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
     <>
+      <input
+        type="text"
+        onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
+        className="bg-secondary-200 rounded-lg p-2"
+        placeholder="Buscar:"
+      />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
-        <input
-          type="text"
-          onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
-        />
+
         {pokemones?.map((pokemon: Pokemon) => (
           <CardPokemon
             key={pokemon.id}
-            nombre={pokemon.nombre}
-            imagen={pokemon.imagen}
+            pokemon={pokemon}
+            callback={callback}
           />
         ))}
       </div>

@@ -1,5 +1,6 @@
 import { useState } from "react";
-import type { Pokemon } from "../../../shered/interfaces/Pokemon.interface";
+import type { Pokemon } from "../../cuadricula/interfaces/Pokemon.interface";
+
 
 export function usePokemonesFavoritos() {
   const [favoritos, setFavoritos] = useState<Pokemon[]>([]);
