@@ -8,7 +8,7 @@ function App() {
   const [preview, setPreview] = useState<Pokemon | null>(null);
   return (
     <>
-      <div className="min-h-screen min-w-screen bg-gradient-to-br from-secondary-400 to-secondary-900 pb-10">
+      <div className="h-screen w-screen overflow-hidden bg-gradient-to-br from-secondary-400 to-secondary-900 flex flex-col">
         <Header />
         <div className="grid grid-cols-12 ml-20 mt-10">
           <div className="col-span-5 z-20">
