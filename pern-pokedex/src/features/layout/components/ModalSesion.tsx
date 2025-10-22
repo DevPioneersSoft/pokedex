@@ -9,7 +9,7 @@ import ButtonCustom from './ButtonCustom'
 
 const LOGIN = z.object({
     username: z.string().min(5, 'Usuario no valido'),
-    contrasena: z.string().min(8, 'Contraseña no valida')
+    contrasena: z.string().min(3, 'Contraseña no valida')
 })
 
 type formValues = z.infer<typeof LOGIN>

@@ -6,12 +6,19 @@ import { usePokemonDetalle } from "../hooks/usePokemonDetalles";
 import PokemonDetalles from "./PokemonDetalles";
 
 
-export default function PokemonPreview(pokemon: Pokemon) {
-    const { id, imagen, nombre } = pokemon;
+type PokemonPreviewProps = Pokemon & {
+    callback?: (pokemon: Pokemon) => void;
+    listaFavoritos: number[];
+};
+
+export default function PokemonPreview({callback, listaFavoritos, ...pokemon }: PokemonPreviewProps) {
+    const { id, nombre, imagen } = pokemon;
 
     const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id)
 
     const stack = useModalsStack(["detallePokemon"])
+
+    const enFavorito = listaFavoritos.find(p => p === id);
 
     return (
         <>
@@ -39,7 +46,9 @@ export default function PokemonPreview(pokemon: Pokemon) {
                     <div className="text-5xl font-bold">
                         #{String(id).padStart(3, "0")}
                     </div>
-                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm ">
+                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm gap-1 ">
+                        <ButtonCustom label={enFavorito ? "Quitar de favoritos": "Agregar a favoritos"} color="secondary"
+                                      onClick={()=> callback ? callback(pokemon) : {}} />
                         <ButtonCustom
                             label="Ver detalles"
                             color="primary"

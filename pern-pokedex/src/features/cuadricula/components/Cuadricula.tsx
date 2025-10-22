@@ -1,5 +1,4 @@
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
-import useFavoritos from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
@@ -7,9 +6,12 @@ interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
-  const {favoritos} =  useFavoritos()
- 
+type CuadriculaProps2 = CuadriculaProps & {
+    favoritos: number[]
+}
+
+export default function Cuadricula({ callback, favoritos }: CuadriculaProps2) {
+
   const {
     pokemones,
     isLoading,
@@ -23,7 +25,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     searchPokemons,
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
 
-  
+
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
@@ -39,6 +41,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
         {pokemones?.map((pokemon: Pokemon) => (
           <CardPokemon
             key={pokemon.id}
+            favorito={favoritos && favoritos.some(p => p === pokemon.id)}
             pokemon={pokemon}
             callback={callback}
           />

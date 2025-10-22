@@ -1,10 +1,10 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import api from "../../../shered/utils/api";
-import { useEffect, useState } from "react";
+import { useState } from "react";
  
-const useFavoritos = () => { 
-    
+const useFavoritos = () => {
+    const [favoritos, setFavs] = useState<number[]>([])
     const query = useQuery({
         queryKey: ["favoritos"],
         queryFn: async () => {
@@ -20,8 +20,7 @@ const useFavoritos = () => {
             const response = await api.post('favorito', favoritos.map(a=>({pokemonId:a})))
             return response.data;
         }
-    })  
-
+    })
 
     const toggleFav = (pokemon:Pokemon)=>{
         /*setFavs((prev) => {
@@ -33,14 +32,12 @@ const useFavoritos = () => {
             setFavs((a)=>[
                 ...a, pokemon.id
             ])
+
         }else{
             setFavs(a=>a.filter(id=>id !== pokemon.id))
         }
 
     }
-
-    
-    const [favoritos, setFavs] = useState<number[]>([])
 
    
     return {data: query.data, favoritos, agregar, toggleFav}
