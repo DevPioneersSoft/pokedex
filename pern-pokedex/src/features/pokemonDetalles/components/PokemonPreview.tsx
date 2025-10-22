@@ -5,68 +5,107 @@ import { useModalsStack } from "@mantine/core";
 import { usePokemonDetalle } from "../hooks/usePokemonDetalles";
 import PokemonDetalles from "./PokemonDetalles";
 
-
 export default function PokemonPreview(pokemon: Pokemon) {
-    const { id, imagen, nombre } = pokemon;
+  const { id, imagen, nombre } = pokemon;
+  const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id);
+  const stack = useModalsStack(["detallePokemon"]);
 
-    const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id)
+  return (
+    <>
+      <div
+        className="
+          relative 
+          w-full 
+          flex 
+          flex-col 
+          items-center 
+          justify-center 
+          text-center 
+          rounded-2xl 
+          overflow-hidden 
+          bg-gradient-to-br 
+          from-secondary-400/70 
+          to-secondary-800/80 
+          shadow-2xl 
+          border 
+          border-white/10 
+          backdrop-blur-md 
+          p-6 
+          md:p-10 
+          transition-all 
+          duration-500 
+          ease-in-out 
+          hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]
+        "
+      >
+        {/* Background image */}
+        <img
+          src={imagen}
+          alt={`${nombre} background`}
+          className="
+            absolute 
+            inset-0 
+            object-contain 
+            opacity-10 
+            scale-150 
+            blur-sm 
+            pointer-events-none
+            transition-transform 
+            duration-700 
+            ease-out
+          "
+        />
 
-    const stack = useModalsStack(["detallePokemon"])
+        {/* Foreground content */}
+        <div className="relative z-10 flex flex-col items-center justify-center gap-4 animate-fade-in">
+          <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-wide drop-shadow-lg">
+            {nombre}
+          </h2>
 
-    return (
-        <>
-            <div className="overflow-hidden">
-                <div
-                    className="relative w-screen h-screen rounded-2xl overflow-hidden bg-secondary-300/80 text-white shadow-xl border border-white/10"
-                    style={{
-                        transform:
-                            "perspective(1000px) rotateY(-20deg) translateX(-50rem) translateY(-10rem)",
-                        transformStyle: "preserve-3d",
-                    }}
-                >
-                    <div className="absolute  opacity-20" />
-                    <img
-                        src={imagen}
-                        alt={`${nombre} background`}
-                        className="absolute -inset-x-70 -inset-y-40 z-0 w-[140%] h-[140%] object-contain opacity-10 scale-150"
-                    />
-                </div>
-                <div className="absolute inset-60 z-10 flex flex-col items-center translate-x-100 -translate-y-20">
-                    <h2 className="text-6xl font-bold  uppercase">
-                        {nombre}
-                    </h2>
-                    <img src={imagen} alt={nombre} className="h-100 drop-shadow-lg" />
-                    <div className="text-5xl font-bold">
-                        #{String(id).padStart(3, "0")}
-                    </div>
-                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm ">
-                        <ButtonCustom
-                            label="Ver detalles"
-                            color="primary"
-                            onClick={() => stack.open("detallePokemon")}
-                            disabled={isLoading}
-                        />
-                    </div>
-                </div>
-            </div>
+          <img
+            src={imagen}
+            alt={nombre}
+            className="
+              h-48 md:h-72 
+              drop-shadow-lg 
+              transform 
+              transition-transform 
+              duration-300 
+              ease-out 
+              hover:scale-110
+            "
+          />
 
-            <ModalGenerica
-                title="Detalles"
-                size={"70%"}
-                footerLeftContent={
-                    <ButtonCustom
-                        label="Cerrar"
-                        color="secondary"
-                        onClick={() => stack.close("detallePokemon")}
-                    />
-                }
-                {...stack.register("detallePokemon")}
-            >
-                {
-                    pokemonDetalles && <PokemonDetalles pokemon={pokemonDetalles} />
-                }
-            </ModalGenerica>
+          <div className="text-3xl md:text-5xl font-bold text-white/90">
+            #{String(id).padStart(3, "0")}
+          </div>
 
-        </>
-    );
+          <div className="mt-4">
+            <ButtonCustom
+              label="Ver detalles"
+              color="primary"
+              onClick={() => stack.open("detallePokemon")}
+              disabled={isLoading}
+            />
+          </div>
+        </div>
+      </div>
+
+      {/* Modal */}
+      <ModalGenerica
+        title="Detalles"
+        size="70%"
+        footerLeftContent={
+          <ButtonCustom
+            label="Cerrar"
+            color="secondary"
+            onClick={() => stack.close("detallePokemon")}
+          />
+        }
+        {...stack.register("detallePokemon")}
+      >
+        {pokemonDetalles && <PokemonDetalles pokemon={pokemonDetalles} />}
+      </ModalGenerica>
+    </>
+  );
 }
