@@ -12,7 +12,6 @@ let user = "Abraham";
 
 export default function Sesion() {
 
-    const stack = useModalsStack(["iniciarSesion"])
 
     const [modal, setModal] = useState(false)
 
@@ -36,7 +35,7 @@ export default function Sesion() {
                     <Menu.Label style={{ color: "var(--color-primary-500)", fontSize: 14 }}>
                         "Invitado"
                     </Menu.Label>
-                    <Menu.Item onClick={() => stack.open("iniciarSesion")}
+                    <Menu.Item onClick={() => setModal(true)}
                     styles={{
                         item: {
                             backgroundColor: "var(--color-info-200)"
