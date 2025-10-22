@@ -5,7 +5,9 @@ import { useState } from 'react'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import ButtonCustom from './ButtonCustom'
-import { useCrearUsuario, useIniciarSesion } from '../hooks/useRegistro'
+import { useLogin } from '../hooks/useLogin'
+import { useRegistro } from '../hooks/useRegistro'
+
 
 const LOGIN = z.object({
     username: z.string().min(5, 'Usuario no valido'),
@@ -17,8 +19,8 @@ type formValues = z.infer<typeof LOGIN>
 export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, onClose: () => void }) {
     const [sesion, setSesion] = useState(false)
 
-    const { mutate } = useIniciarSesion();
-    const { mutate: crearUsuario } = useCrearUsuario();
+    const { mutate: loginUsuario } = useLogin();
+    const { mutate: crearUsuario } = useRegistro();
 
     const form = useForm<formValues>({
         resolver: zodResolver(LOGIN),
@@ -32,7 +34,7 @@ export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, 
         if (sesion) {
             crearUsuario(data)
         } else {
-            mutate(data)
+            loginUsuario(data)
         }
     }
     return (

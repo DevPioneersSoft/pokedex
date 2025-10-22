@@ -1,12 +1,11 @@
-import { useMutation } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query";
 import api from "../../../shered/api";
 
-export function useRegistro() {
-    //12345678915
+export function useLogin() {
     return useMutation({
         mutationFn: async (data: { username: string, contrasena: string }) => {
             try {
-                const response = await api.post("usuario", data)
+                const response = await api.post("autenticacion", data)
                 return response.data
             } catch (error) {
                 console.error(error)

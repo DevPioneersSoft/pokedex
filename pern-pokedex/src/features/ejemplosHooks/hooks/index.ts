@@ -1,1 +1,0 @@
-export { usePokemonesFavoritos } from "./usePokemonesFavoritos";
