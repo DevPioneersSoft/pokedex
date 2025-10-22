@@ -7,13 +7,13 @@ export interface UseBuscarPokemonesParams {
   initialPage?: number;
   initialPageSize?: number;
   initialSearch?: string;
-  favoritos?: number[]
+  favoritos: number[]
 }
 
-export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
-  const [page, setPage] = useState(hookParams?.initialPage ?? 1);
-  const [pageSize] = useState(hookParams?.initialPageSize ?? 20);
-  const [search, setSearch] = useState(hookParams?.initialSearch ?? "");
+export function useBuscarPokemones({initialPage, initialPageSize,initialSearch,favoritos = []}: UseBuscarPokemonesParams) {
+  const [page, setPage] = useState(initialPage ?? 1);
+  const [pageSize] = useState(initialPageSize ?? 20);
+  const [search, setSearch] = useState(initialSearch ?? "");
 
   let where = undefined;
 
@@ -33,29 +33,29 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
   };
 
   const query = useQuery({
-    queryKey: ["buscarPokemones", params],
+    queryKey: ["buscarPokemones", params,favoritos],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
       const response = await api.get<ResponsePokemons>("pokemon", {
         params,
       });
-      console.log(response.data);
       return response.data;
     },
   });
 
-  const pokemonOrdenador = useMemo(() => {
+  const pokemonsOrdenados = useMemo(() => {
     if (!query.data?.data)
       return []
     return query.data.data.sort((a, b) => {
-      const aFav = hookParams?.favoritos?.includes(a.id);
-      const bFav = hookParams?.favoritos?.includes(b.id);
+      const aFav = favoritos?.includes(a.id);
+      const bFav = favoritos?.includes(b.id);
 
-      if (aFav && !bFav) return -1; 
-      if (!aFav && bFav) return 1;  
-      return 0;                     
+      if (aFav && !bFav) return -1;
+      if (!aFav && bFav) return 1;
+      return 0;
     });
-  }, [query.data?.data, hookParams?.favoritos])
+  }, [query.data?.data, favoritos]); 
+
 
   const nextPage = () => {
     if (query.data?.hasNextPage) {
@@ -75,7 +75,7 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
   };
 
   return {
-    pokemones: pokemonOrdenador,
+    pokemones: pokemonsOrdenados,
     isLoading: query.isLoading,
     refetch: query.refetch,
     isFetching: query.isFetching,

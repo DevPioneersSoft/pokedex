@@ -4,9 +4,11 @@ import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
+  favoritos: number[]
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback,favoritos }: CuadriculaProps) {
+  // const { favoritos } = useFavoritos();
   const {
     pokemones,
     isLoading,
@@ -18,7 +20,8 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
+
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (

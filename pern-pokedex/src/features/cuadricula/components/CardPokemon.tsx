@@ -12,7 +12,7 @@ export default function CardPokemon({ pokemon, callback }: CardPokemonProps) {
   return (
     <div
       key={nombre}
-      className="bg-white/50 backdrop-blur-md rounded-lg p-4 flex flex-col items-center"
+      className= {`bg-white/50 backdrop-blur-md rounded-lg p-4 flex flex-col items-center`}
       onClick={() => {
         if (callback) callback(pokemon)
       }}

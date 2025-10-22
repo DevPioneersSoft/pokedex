@@ -4,15 +4,15 @@ import type { Pokemon } from "../interfaces/Pokemon.interface";
 import { useState } from "react";
 
 export const useFavoritos = () => {
+    const [favoritos, setFavoritos] = useState<number[]>([]);
+
     const query = useQuery({
         queryKey: ['favoritos'],
         queryFn: async () => {
             const { data } = await api<Pokemon[]>('/usuario/favoritos');
-            setFavoritos(
-                data.map(item => item.id)
-            )
             return data;
-        }
+        },
+         
     });
 
     const agregarfavorito = useMutation({
@@ -30,7 +30,6 @@ export const useFavoritos = () => {
         });
     }
 
-    const [favoritos, setFavoritos] = useState<number[]>([]);
 
     return {data: query.data,favoritos, toggleFav,agregarfavorito}
 
