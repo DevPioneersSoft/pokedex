@@ -1,6 +1,8 @@
+import { Button, Container, Group, SimpleGrid, TextInput } from "@mantine/core";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
+import { useState } from "react";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
@@ -10,6 +12,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
   const {
     pokemones,
     isLoading,
+    refetch,
     isFetching,
     prevPage,
     nextPage,
@@ -19,47 +22,49 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     totalPages,
     searchPokemons,
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  const [searchTerm, setSearchTerm] = useState('');
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
     <>
-      <input
-        type="text"
-        onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
-        className="bg-secondary-200 rounded-lg p-2"
-        placeholder="Buscar:"
-      />
-      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
+      
+    <Container size="xl" py="lg">
+      <Group mb="xl" justify="space-between" gap="md">
+        <Button color="gray" onClick={() => refetch()}>Refrescar</Button>
+        
+        <TextInput
+            placeholder="Buscar por ID o nombre..."
+            value={searchTerm}
+            onChange={(event) => setSearchTerm(event.currentTarget.value)}
+            style={{ flexGrow: 1 }}
+        />
+        <Button 
+            color="green"
+            onClick={() => searchPokemons(searchTerm)} 
+        >
+            Buscar
+        </Button>
+      </Group>
 
-        {pokemones?.map((pokemon: Pokemon) => (
+      <SimpleGrid cols={{ base: 2, sm: 4, lg: 4 }} style={{ 
+          gap: '20px' 
+      }} >
+        {pokemones?.map((pokemon, index) => (
           <CardPokemon
-            key={pokemon.id}
-            pokemon={pokemon}
+            key={index}
+            pokemon = {pokemon}
             callback={callback}
           />
         ))}
-      </div>
-      {pokemones && (
-        <div className="flex justify-center items-center mt-4 gap-2">
-          <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
-            onClick={() => prevPage()}
-            disabled={!hasPrevPage}
-          >
-            Anterior
-          </button>
+      </SimpleGrid>
+      <Group justify="center" gap="md" mb="xl" mt={30}> 
+         <Button  color="black" onClick={() => prevPage()} disabled={!hasPrevPage}>Anterior</Button>
           <span>
             Página {page} de {totalPages}
           </span>
-          <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
-            onClick={() => nextPage()}
-            disabled={!hasNextPage}
-          >
-            Siguiente
-          </button>
-        </div>
-      )}
+          <Button color="black" onClick={() => nextPage()} disabled={!hasNextPage}>Siguiente</Button>
+      </Group>
+    </Container>
     </>
   );
 }

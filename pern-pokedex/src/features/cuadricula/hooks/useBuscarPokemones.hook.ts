@@ -32,7 +32,7 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
   };
 
   const query = useQuery({
-    queryKey: ["buscarPokemones", params],
+    queryKey: ["buscarPokemones", search, page, pageSize],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
       const response = await api.get<ResponsePokemons>("pokemon", {
