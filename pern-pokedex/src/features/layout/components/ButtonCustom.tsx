@@ -3,7 +3,7 @@ import type { Color } from "../types/Color"
 
 interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     id?: string,
-    type?: "submit" | "reset" | "button"
+    type?: "submit" | "reset" | "button",
     label?: string,
     color?: Color,
     isLoading?: boolean
@@ -42,37 +42,29 @@ const colors = {
     },
 };
 
-
 export default function ButtonCustom({
-    label,
-    color = 'default',
-    className,
-    isLoading = false,
-    disabled,
-    ...props
-}: ButtonCustomProps) {
+  id, type, label, color = 'default', isLoading, className, disabled, ...props
+} : ButtonCustomProps) {
 
-    const variante = colors[color]
-
-    return (
-        <button
-            className={`
-            relative inline-flex items-center justify-center px-6 py-2 
-            rounded-lg font-bold uppercase text-white 
-            bg-gradient-to-b ${variante.bg} border-4 
-            ${variante.border} shadow-lg transition-all duration-200 
-            ${variante.hover} active:translate-y-0.
-            5 active:shadow-md focus:outline-none focus:ring-2 ${variante.ringFocus}
-            focus:ring-offset-2
-            disabled:cursor-not-allowed
-            ${className ?? ""} 
-            `}
-            disabled={disabled || isLoading}
-            {...props}
-        >
-            {
-                isLoading ? <Loader color="white" type="bars" size={'sm'} /> : label
-            }
-        </button>
-    )
+  const variante = colors[color]
+  
+  return (
+  <button
+    className={
+      `
+      relative inline-flex items-center justify-center px-6 py-2
+      rounded-lg font-bold uppercase text-white
+      bg-gradient-to-b ${variante.bg} border-4 ${variante.border} shadow-lg transition-all duration-200
+      ${variante.hover} active:translate-y-0.5 active:shadow-md focus:outline-none focus:ring-2 ${variante.ringFocus}
+      focus:ring-offset-2
+      disabled:cursor-not-allowed
+      ${className ?? ""}
+      `
+    }
+    disabled={disabled || isLoading}
+    {...props}
+  >
+    {isLoading ? <Loader color="white" type="bars" size={'sm'} /> : label}
+  </button>
+);
 }

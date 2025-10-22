@@ -1,5 +1,5 @@
 import { useReducer } from "react";
-import { pokemonDummies } from "../cuadricula/components/pokemon.dummy";
+import { pokemonDummies } from "../cuadricula/componentes/pokemon.dummy";
 import {
   equipoReducer,
   estadoInicial,
