@@ -3,9 +3,15 @@ import Cuadricula from "./features/cuadricula/components/Cuadricula";
 import Header from "./features/layout/components/Header";
 import type { Pokemon } from "./features/cuadricula/interfaces/Pokemon.interface";
 import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview";
+import { useFavoritos } from "./features/layout/hooks/useFavoritos";
 
 function App() {
-  const [preview, setPreview] = useState<Pokemon | null>(null)
+  const [preview, setPreview] = useState<Pokemon | null>(null);
+  const {toggleFavorito} = useFavoritos();
+  const handlePokemon = (poke: Pokemon) => {
+    setPreview(poke);
+    toggleFavorito(poke);
+  }
   return (
 
     <>
@@ -14,7 +20,7 @@ function App() {
         <div className="grid grid-cols-12 ml-20 mt-10">
           <div className="col-span-5 z-20">
             <Cuadricula
-              callback={(pokemon: Pokemon) => setPreview(pokemon)}
+              callback={(pokemon: Pokemon) => handlePokemon(pokemon)}
             />
           </div>
           <div className="col-span-7">
