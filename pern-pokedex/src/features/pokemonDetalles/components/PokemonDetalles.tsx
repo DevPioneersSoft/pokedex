@@ -66,24 +66,30 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
         <>
             <Grid>
                 <Grid.Col span={6}>
-                    <Flex justify={'center'} align={'center'} gap={20}>
-                        {/*<Image src="/pokeball.svg" alt="Pokeball" h={60} w={60} />*/}
-                        <Text size="4rem" fw={700}>{nombre}</Text>
-                    </Flex>
-
                     <Flex justify={'center'}>
-                        <Text size="2rem" fw={500}> #{String(id).padStart(3, "0")}</Text>
+                        <Image src="/pokeball.svg" alt="Pokeball" h={30} w={30} /> 
+                        <Text size="2rem" fw={800}> &nbsp; {String(id).padStart(3, "0")}</Text>
                     </Flex>
-                    <Space h={'xl'} />
                     <Flex justify={'center'}>
                         <Image h={450} w="auto" src={imagen} />
                     </Flex>
                     <Space h={'xs'} />
+                     <Flex justify={'center'} align={'center'} gap={20}>
+                        <Text size="4rem" fw={700}>{nombre}</Text>
+                    </Flex>
+                    <Space h={'xl'} />
                     <Flex justify={'center'}>
                         <PokemonTypes types={tipoPokemon.map(tipo => tipo.nombre)} />
                     </Flex>
+                    
                 </Grid.Col>
+                
                 <Grid.Col span={6}>
+                     <Flex justify={'center'}>
+                        <Text fw={'bold'} size="xl">{descripcion}</Text>
+                    </Flex>
+
+                    <Space h={30} />
 
                     <Stack>
                         {Object.entries(stats).map(([key, value]) => (
@@ -96,22 +102,14 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
                             </div>
                         ))}
                     </Stack>
-
+                    
                     <Space h={30} />
 
-                    <Flex justify={'center'}>
-                        <Text fw={'bold'} size="xl">{descripcion}</Text>
-                    </Flex>
-                    
-                    <Space h={'md'} />
-                    
                     <Group justify="space-between" ml={'35%'}>
                         <Flex justify={'center'}>
                             <ButtonCustom label="Descargar" color="warning" isLoading={isFetching} onClick={() => refetch()} style={{ cursor: 'pointer' }} />
                         </Flex>
                     </Group>
-
-                    
 
                 </Grid.Col>
 
