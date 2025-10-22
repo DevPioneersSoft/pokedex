@@ -1,7 +1,5 @@
-import { Avatar, Menu, useModalsStack} from "@mantine/core";
-import ModalGenerica from "../../cuadricula/components/ModalGenerica";
+import { Avatar, Menu} from "@mantine/core";
 import { useState } from "react";
-import ButtonCustom from "./ButtonCustom";
 import ModalSesion from "./ModalSesion";
 
 

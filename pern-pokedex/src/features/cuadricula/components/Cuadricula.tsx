@@ -2,6 +2,7 @@ import { Input } from "@mantine/core";
 import { useBuscarPokemones } from "../../ejemplosHooks/hooks"
 import CardPokemon from "./CardPokemon";
 import type { Pokemon } from "../../interfaces/Pokemon.interface";
+import useFavoritos from "./hooks/useFavoritos";
 
 interface CuadriculaProps{
 
@@ -9,9 +10,12 @@ interface CuadriculaProps{
   callback?: (pokemon: Pokemon) => void
 
 }
+  const {favoritos} = useFavoritos()
 
 export default function Cuadricula({callback}: CuadriculaProps) {
-  const { pokemones, isLoading, refetch, isFetching, nextPage, prevPage, searchPokemons } = useBuscarPokemones();
+  const { pokemones, isLoading, refetch, isFetching, nextPage, prevPage, searchPokemons } = useBuscarPokemones(
+    {initialPage: 1, favoritos:favoritos}
+  );
 
 
   return (
