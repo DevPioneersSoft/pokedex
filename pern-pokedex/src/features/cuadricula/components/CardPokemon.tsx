@@ -1,3 +1,4 @@
+import { Card, Center, Image, Text } from "@mantine/core";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 
 interface CardPokemonProps {
@@ -12,13 +13,21 @@ export default function CardPokemon({ pokemon, callback }: CardPokemonProps) {
   return (
     <div
       key={nombre}
-      className="bg-white/50 backdrop-blur-md rounded-lg p-4 flex flex-col items-center"
+      className="backdrop-blur-md rounded-lg flex flex-col items-center"
       onClick={() => {
         if (callback) callback(pokemon)
       }}
     >
-      <h2>{nombre}</h2>
-      <img src={imagen} alt={nombre} />
+      <Card shadow="sm"  radius="md" withBorder className="m-3 inline-block bg-white" style={{ cursor: 'pointer' }}>
+        <Card.Section>
+          <Center className="bg-gray-300">
+            <Text size="xl" fw={700} >{nombre}</Text>
+          </Center> 
+        </Card.Section>
+        <Card.Section>
+          <Image src={imagen} alt={nombre}/>
+        </Card.Section>
+      </Card>
     </div>
   );
 }

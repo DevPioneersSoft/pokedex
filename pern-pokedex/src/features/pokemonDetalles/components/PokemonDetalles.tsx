@@ -1,4 +1,4 @@
-import { Flex, Grid, Group, Image, Progress, Space, Stack, Text } from "@mantine/core";
+import { Flex, Grid, Group, Image, Progress, Space, Stack, Text, type ProgressProps } from "@mantine/core";
 
 import ButtonCustom from "../../layout/components/ButtonCustom";
 import PokemonTypes from "./PokemonTypes";
@@ -25,6 +25,30 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
 
     const { refetch, isFetching } = usePokemonFile(pokemon.id)
 
+    const colorPorCaracteristica = (tipo : string) =>{
+        switch (tipo) {
+            case 'vida':
+            return "red";
+        
+            case 'ataque':
+            return "cyan";
+
+            case 'defensa':
+            return "orange";
+
+            case 'ataqueEspecial':
+            return "green";
+
+            case 'defensaEspecial':
+            return "purple";
+
+            case 'velocidad':
+            return "yellow";
+
+            default:
+            return "black";
+        }
+    }
 
     function formatearNombre(nombre: string) {
         const nombresLegibles: Record<string, string> = {
@@ -43,7 +67,7 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
             <Grid>
                 <Grid.Col span={6}>
                     <Flex justify={'center'} align={'center'} gap={20}>
-                        <Image src="/pokeball.svg" alt="Pokeball" h={60} w={60} />
+                        {/*<Image src="/pokeball.svg" alt="Pokeball" h={60} w={60} />*/}
                         <Text size="4rem" fw={700}>{nombre}</Text>
                     </Flex>
 
@@ -61,19 +85,14 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
                 </Grid.Col>
                 <Grid.Col span={6}>
 
-                    <Group justify="space-between">
-                        <ButtonCustom label="Descargar" color="primary" isLoading={isFetching} onClick={() => refetch()} />
-                    </Group>
-
-                    <Space h={'md'} />
-
                     <Stack>
                         {Object.entries(stats).map(([key, value]) => (
                             <div key={key}>
-                                <Text size="sm" fw={500} mb={4}>
-                                    {formatearNombre(key)}: {value}
+                                <Text size="sm" fw={500} mb={3}>
+                                    {formatearNombre(key)}
                                 </Text>
-                                <Progress value={(value / MAX_STAT_VALUE) * 100} />
+                                <Progress value={(value / MAX_STAT_VALUE) * 100} color={colorPorCaracteristica(key)} />
+                                <Text size="md" fw={300} ml={5}>{value}</Text>
                             </div>
                         ))}
                     </Stack>
@@ -81,8 +100,19 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
                     <Space h={30} />
 
                     <Flex justify={'center'}>
-                        <Text fs={'italic'} size="xl">{descripcion}</Text>
+                        <Text fw={'bold'} size="xl">{descripcion}</Text>
                     </Flex>
+                    
+                    <Space h={'md'} />
+                    
+                    <Group justify="space-between" ml={'35%'}>
+                        <Flex justify={'center'}>
+                            <ButtonCustom label="Descargar" color="warning" isLoading={isFetching} onClick={() => refetch()} style={{ cursor: 'pointer' }} />
+                        </Flex>
+                    </Group>
+
+                    
+
                 </Grid.Col>
 
             </Grid>

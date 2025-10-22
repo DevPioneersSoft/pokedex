@@ -1,4 +1,5 @@
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
+import useFavoritos from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
@@ -7,6 +8,8 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
+  const { favoritos } = useFavoritos();
+  
   const {
     pokemones,
     isLoading,
@@ -18,15 +21,16 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos: favoritos });
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
     <>
       <input
         type="text"
+        
         onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
-        className="bg-secondary-200 rounded-lg p-2"
+        className="bg-secondary-200 rounded-lg p-2 ml-10"
         placeholder="Buscar:"
       />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
@@ -42,20 +46,18 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
       {pokemones && (
         <div className="flex justify-center items-center mt-4 gap-2">
           <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
+            className="px-3 py-1 rounded bg-blue-600 disabled:opacity-50"
             onClick={() => prevPage()}
-            disabled={!hasPrevPage}
-          >
+            disabled={!hasPrevPage}>
             Anterior
           </button>
           <span>
             Página {page} de {totalPages}
           </span>
           <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
+            className="px-3 py-1 rounded bg-blue-600 disabled:opacity-50"
             onClick={() => nextPage()}
-            disabled={!hasNextPage}
-          >
+            disabled={!hasNextPage}>
             Siguiente
           </button>
         </div>

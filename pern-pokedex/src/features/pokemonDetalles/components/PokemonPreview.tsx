@@ -45,6 +45,7 @@ export default function PokemonPreview(pokemon: Pokemon) {
                             color="primary"
                             onClick={() => stack.open("detallePokemon")}
                             disabled={isLoading}
+                            style={{ cursor: 'pointer' }}
                         />
                     </div>
                 </div>
