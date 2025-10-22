@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import api from "../../../shered/utils/api";
+import api from "../../../shared/utils/api";
 export function useIniciarSesion() {
     return useMutation({
         mutationFn: async (data: { username: string, contrasena: string }) => {

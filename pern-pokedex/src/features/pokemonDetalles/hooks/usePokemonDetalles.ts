@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import api from "../../../shered/utils/api";
+import api from "../../../shared/utils/api";
 import type { PokemonDetalle } from "../types/detallePokemon.interface";
 
 export function usePokemonDetalle(id: number) {
