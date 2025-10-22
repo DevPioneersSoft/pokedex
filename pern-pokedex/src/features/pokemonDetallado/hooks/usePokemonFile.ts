@@ -1,5 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
-import api from "../../../shered/utils/api";
+import api from "../../../shared/util/api";
+
 
 export function usePokemonFile(id: number) {
     return useQuery({

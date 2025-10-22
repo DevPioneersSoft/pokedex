@@ -1,5 +1,7 @@
 import { Loader } from "@mantine/core"
-import type { Color } from "../types/Color"
+
+
+type Color = "primary" | "secondary" | "default" | "danger" | "warning"
 
 interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
     id?: string,

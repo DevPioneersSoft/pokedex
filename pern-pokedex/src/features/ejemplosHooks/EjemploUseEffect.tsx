@@ -1,55 +1,60 @@
 import { useEffect, useState } from "react"
 
-interface PokemonAPI {
-    pokemon: {
-        name: string
+interface PokemonAPI{
+    pokemon:{
+        name:string
     }
 }
 
-export default function EjemploUseEffect({ tipo }: { tipo: string }) {
+export default function EjemploUseEffect({tipo}: {tipo:string}) {
 
-    /*const [numeroPokebolas, setNumeroPokebolas] = useState(0)
+   /* const [numeroPokebolas, setNumeroPokebolas] = useState(0)
+
+
     const incrementar = () => {
         setNumeroPokebolas(numeroPokebolas + 1)
+        console.log(numeroPokebolas)
     }
 
     useEffect(() => {
-        console.log(numeroPokebolas)
-    }, [numeroPokebolas]);*/
+        console.log("use effect")
+    }, [numeroPokebolas])*/
+
 
     const [pokemones, setPokemones] = useState<PokemonAPI[]>([])
     const [cargando, setCargando] = useState(true)
 
-    const buscarPokemonesPorTipo = async () => {
+
+        const buscarPokemonesPorTipo = async () => {
         setCargando(true)
+
+        // Agregar delay antes de hacer la petición
         setTimeout(async () => {
             try {
-                const reponse = await fetch(`https://pokeapi.co/api/v2/type/${tipo}`)
-                const data = await reponse.json()
+                const response = await fetch(`https://pokeapi.co/api/v2/type/${tipo}`)
+                const data = await response.json()
                 setPokemones(data.pokemon ?? [])
             } catch (error) {
-                console.error("Error buscando pokemon", error)
+                console.error("No encontró la api", error)
             } finally {
                 setCargando(false)
             }
-        }, 1000);
+        }, 1000) // 1 segundo de delay
     }
-
-    useEffect(() => {
+    useEffect(() =>{
         buscarPokemonesPorTipo()
-    }, [tipo]);
+    },[tipo])
 
-
-    if (cargando) return <div>Buscando pokemon de tipo {tipo}...</div>
+    if(cargando) return <div>Buscando Pokemon buscando de tipo {tipo}...</div>
 
     return (
-        <div>
-            <h2>Pokemon de tipo {tipo}</h2>
-            {
-                pokemones.map((pokemon) => (<div className="px-3" key={pokemon.pokemon.name}>
-                    {pokemon.pokemon.name}
-                </div>))
-            }
-        </div>
+        <>
+           <h2>Pokemon tipo {tipo} </h2>
+           {
+            pokemones.map((pokemon) => (<div className="p" key={pokemon.pokemon.name}>
+                {pokemon.pokemon.name}
+            </div>))
+           }
+        </>
     )
 }

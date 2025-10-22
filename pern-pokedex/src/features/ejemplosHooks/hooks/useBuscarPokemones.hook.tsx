@@ -1,8 +1,7 @@
-import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import type { ResponsePokemons } from "../interfaces/Pokemon.interface";
-import api from "../../../shered/utils/api";
-
+import type { ResponsePokemons } from "../../interfaces/Pokemon.interface";
+import api from "../../../shared/util/api";
+import { useState } from "react";
 export interface UseBuscarPokemonesParams {
   initialPage?: number;
   initialPageSize?: number;

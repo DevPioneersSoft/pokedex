@@ -1,0 +1,1 @@
+type Color = "primary" | "secondary" | "default" | "danger" | "warning"
