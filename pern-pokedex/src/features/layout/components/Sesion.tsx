@@ -1,8 +1,12 @@
 import { Avatar, Menu } from "@mantine/core";
+import { useState } from "react";
+import ModalSesion from "./ModalSesion";
 
 export default function Sesion() {
+    const [modal, setModal] = useState(false)
 
     return (
+        <>
         <div className="mr-10">
             <Menu shadow="md" width={200}>
                 <Menu.Target>
@@ -28,7 +32,7 @@ export default function Sesion() {
                     >
                         Invitado
                     </Menu.Label>
-                    <Menu.Item
+                        <Menu.Item onClick={() => setModal(true)}
                         styles={{
                             item: {
                                 backgroundColor: "var(--color-info-200)"
@@ -40,5 +44,7 @@ export default function Sesion() {
                 </Menu.Dropdown>
             </Menu>
         </div>
+            <ModalSesion onOpened={modal} onClose={() => setModal(false)} />
+        </>
     )
 }
