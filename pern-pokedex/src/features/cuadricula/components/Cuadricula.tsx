@@ -1,3 +1,4 @@
+import userRegistrarPokemonesFavoritos from "../../pokemonDetalles/hooks/useHookRegistrarPokemonesFavoritos";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
@@ -7,6 +8,8 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
+const {favoritos} = userRegistrarPokemonesFavoritos();
+
   const {
     pokemones,
     isLoading,
@@ -18,7 +21,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritosIds: favoritos });
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (

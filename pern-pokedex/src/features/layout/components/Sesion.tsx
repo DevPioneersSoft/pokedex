@@ -1,8 +1,17 @@
-import { Avatar, Menu } from "@mantine/core";
+import { Avatar, Menu, Modal } from "@mantine/core";
+import { useState } from "react";
+import ModalGenerica from "./ModalGenerica";
+import { ModalSesion } from "./ModalSesion";
+
+
 
 export default function Sesion() {
 
-    return (
+const [modalAbierto, setModalAbierto] = useState(false);
+const abrirModalSesion = () => setModalAbierto(true);
+const cerrarModalSesion = () => setModalAbierto(false); 
+   
+  return (
         <div className="mr-10">
             <Menu shadow="md" width={200}>
                 <Menu.Target>
@@ -34,11 +43,15 @@ export default function Sesion() {
                                 backgroundColor: "var(--color-info-200)"
                             }
                         }}
+
+                        onClick={abrirModalSesion}
                     >
                         Iniciar Sesión
                     </Menu.Item>
                 </Menu.Dropdown>
             </Menu>
+
+                <ModalSesion abierto={modalAbierto} onClose={cerrarModalSesion} />
         </div>
     )
 }

@@ -6,6 +6,11 @@ import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview
 
 function App() {
   const [preview, setPreview] = useState<Pokemon | null>(null)
+
+  const handlePokemonClick = (pokemon: Pokemon) => {
+    setPreview(pokemon);
+  }
+
   return (
 
     <>
@@ -14,7 +19,7 @@ function App() {
         <div className="grid grid-cols-12 ml-20 mt-10">
           <div className="col-span-5 z-20">
             <Cuadricula
-              callback={(pokemon: Pokemon) => setPreview(pokemon)}
+              callback={(pokemon: Pokemon) => handlePokemonClick(pokemon)}
             />
           </div>
           <div className="col-span-7">
