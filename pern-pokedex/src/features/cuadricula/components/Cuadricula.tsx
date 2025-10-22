@@ -2,12 +2,15 @@ import { useState } from "react";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
+import useFavoritos from "../hooks/useFavoritos";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void;
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
+  const {favoritos} = useFavoritos()
+
   const {
     pokemones,
     isLoading,
@@ -19,7 +22,11 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ 
+    initialPage: 1, 
+    initialPageSize: 30,
+    favoritos
+  });
 
 
   const [busqueda, setBusqueda] = useState("");
@@ -61,7 +68,11 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
       {/* Pokemones */}
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
         {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon key={pokemon.id} pokemon={pokemon} callback={callback} />
+          <CardPokemon 
+            key={pokemon.id} 
+            pokemon={pokemon} 
+            callback={callback} 
+          />
         ))}
       </div>
 

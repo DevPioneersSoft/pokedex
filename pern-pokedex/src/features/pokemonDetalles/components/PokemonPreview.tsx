@@ -12,6 +12,7 @@ export default function PokemonPreview(pokemon: Pokemon) {
 
   return (
     <>
+      {/* Carta */}
       <div
         className="
           relative 
@@ -38,7 +39,7 @@ export default function PokemonPreview(pokemon: Pokemon) {
           hover:shadow-[0_0_20px_rgba(255,255,255,0.15)]
         "
       >
-        {/* Background image */}
+        {/* Fondo */}
         <img
           src={imagen}
           alt={`${nombre} background`}
@@ -56,7 +57,7 @@ export default function PokemonPreview(pokemon: Pokemon) {
           "
         />
 
-        {/* Foreground content */}
+        {/* Contenido */}
         <div className="relative z-10 flex flex-col items-center justify-center gap-4 animate-fade-in">
           <h2 className="text-4xl md:text-6xl font-bold uppercase tracking-wide drop-shadow-lg">
             {nombre}

@@ -6,6 +6,11 @@ import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview
 
 function App() {
   const [preview, setPreview] = useState<Pokemon | null>(null);
+  
+  const handlePokemon = (p: Pokemon) => {
+    setPreview(p);
+    //
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-secondary-400 to-secondary-900 text-white">
@@ -36,7 +41,7 @@ function App() {
             "
           >
             <Cuadricula
-              callback={(pokemon: Pokemon) => setPreview(pokemon)}
+              callback={(pokemon: Pokemon) => handlePokemon(pokemon)}
             />
           </div>
 
