@@ -1,48 +1,51 @@
-import ModalGenerica from "./ModalGenerica";
-import {useForm} from 'react-hook-form';
-import { zodResolver } from '@hookform/resolvers/zod';
-import z from "zod";
-import useLogin from "../hooks/useLogin";
-import useRegister from "../hooks/useRegister";
 
-const LOGIN =  z.object({
-    username: z.string().min(3, "El usuario es obligatorio"),
-    contrasena: z.string().min(6, "La contraseña debe tener al menos 6 caracteres")
+import { zodResolver } from '@hookform/resolvers/zod'
+import { Input, Modal } from '@mantine/core'
+import { useState } from 'react'
+import { useForm } from 'react-hook-form'
+import { z } from 'zod'
+import { useCrearUsuario, useIniciarSesion } from '../../pokemonDetalles/hooks/useRegistro'
+import ButtonCustom from './ButtonCustom'
+
+const LOGIN = z.object({
+    username: z.string().min(5, 'Usuario no valido'),
+    contrasena: z.string().min(8, 'Contraseña no valida')
 })
 
-type formValues = z.infer<typeof LOGIN>;
+type formValues = z.infer<typeof LOGIN>
 
-const ModalSesion = ({ modal, setModal }: { modal: string | null; setModal: (modal: string | null) => void }) => {
-    const {mutate: login} = useLogin();
-    const {mutate: register} = useRegister();
-    const _form =  useForm<formValues>({
+export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, onClose: () => void }) {
+    const [sesion, setSesion] = useState(false)
+
+    const { mutate } = useIniciarSesion();
+    const { mutate: crearUsuario } = useCrearUsuario();
+
+    const form = useForm<formValues>({
         resolver: zodResolver(LOGIN),
         defaultValues: {
             username: '',
             contrasena: ''
         }
-    });
+    })
 
-    const handlerSubmit = (data: formValues) => {
-        if(modal === 'login'){
-            login({username: data.username, contrasena: data.contrasena});
-        }   else if(modal === 'register'){
-            register({username: data.username, contrasena: data.contrasena});
+    const onSubmit = (data: formValues) => {
+        if (sesion) {
+            crearUsuario(data)
+        } else {
+            mutate(data)
         }
     }
-
     return (
-        <ModalGenerica title={modal === "login" ? "Iniciar Sesión" : "Registro"} opened={modal != null} onClose={() => setModal(null)}>
-            <form className="flex flex-col space-y-4 mt-4" onSubmit={_form.handleSubmit(handlerSubmit)}>
-                <input placeholder="Usuario" className="border p-2 rounded border-black"  {..._form.register("username")} />
-                { _form.formState.errors.username && <span className="text-red-500">{_form.formState.errors.username.message}</span> }
-                <input placeholder="Contraseña" className="border p-2 rounded border-black"  {..._form.register("contrasena")} />
-                { _form.formState.errors.contrasena && <span className="text-red-500">{_form.formState.errors.contrasena.message}</span> }
-                <button className="bg-green-500 border border-green-800"  type="submit">{modal === "login" ? "Iniciar Sesión" : "Registrarse"}</button>
-                <button onClick={()=>setModal(modal === 'login' ? 'register' :  'login')} className="underline" type="button">{modal === "login" ? "¿No tienes cuenta?, registrate." : "¿Ya tienes cuenta?, inicia sesión."}</button>
-            </form>                        
-        </ModalGenerica>
+        <Modal onClose={onClose} opened={onOpened}
+            title={sesion ? 'Registrarse' : 'Iniciar Sesión'}
+        >
+            <form onSubmit={form.handleSubmit(onSubmit)}>
+                <Input placeholder="usuario" {...form.register('username')} error={form.formState.errors.username?.message} />
+                <Input type="password" placeholder="contraseña" {...form.register('contrasena')} error={form.formState.errors.contrasena?.message} />
+                <ButtonCustom type='submit' color="primary" label="Iniciar sesión" />
+                <ButtonCustom type="button" color="secondary" onClick={() => setSesion((prev) => !prev)} label={sesion ? 'Iniciar Sesión' : 'Registrarse'} />
+            </form>
+
+        </Modal>
     )
 }
-
-export default ModalSesion; 
