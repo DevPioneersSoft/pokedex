@@ -10,6 +10,7 @@ export const useFavoritos = () => {
         queryKey: ['favoritos'],
         queryFn: async () => {
             const { data } = await api<Pokemon[]>('/usuario/favoritos');
+            setFavoritos(data.map(pokemon => pokemon.id))
             return data;
         },
          
