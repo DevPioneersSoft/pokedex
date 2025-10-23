@@ -1,6 +1,7 @@
 import { useQuery } from '@tanstack/react-query';
 import type { Pokemon } from "../../interfaces/Pokemon.interface";
 import { useMemo, useState } from 'react';
+import useFavoritos from './useFavoritos';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -66,16 +67,37 @@ export function useBuscarPokemones() {
     setRecargando(false);
   };
 
-  const pokemonsList: Pokemon[] = Array.isArray(query.data?.pokemons) ? query.data.pokemons : [];
+  const { favoritos } = useFavoritos();
 
   const pokemonOrdenados = useMemo(() => {
-    return [...(query.data?.pokemons ?? [])].sort((a, b) => a.id - b.id);
+    const pokemons = [...(query.data?.pokemons ?? [])];
+    if (!Array.isArray(favoritos) || favoritos.length === 0) {
+      return pokemons.sort((a, b) => a.id - b.id);
+    }
 
-  }, [query.data?.pokemons]);
+    const favoritoSet = new Set(favoritos);
+    const favoritosOrdenados: Pokemon[] = [];
+    const noFavoritos: Pokemon[] = [];
+
+    const byId = new Map(pokemons.map((p) => [p.id, p]));
+
+    for (const favId of favoritos) {
+      const p = byId.get(favId);
+      if (p) favoritosOrdenados.push(p);
+    }
+
+    for (const p of pokemons) {
+      if (!favoritoSet.has(p.id)) noFavoritos.push(p);
+    }
+
+    noFavoritos.sort((a, b) => a.id - b.id);
+
+    return [...favoritosOrdenados, ...noFavoritos];
+  }, [query.data?.pokemons, favoritos]);
 
   return {
-    pokemons: query.data?.pokemons ?? [],
-    pokemonsList,
+    pokemons: pokemonOrdenados,
+    pokemonsList: pokemonOrdenados,
     cargando: query.isLoading,
     isFetching: query.isFetching,
     error: query.error ? { message: query.error.message } : null,

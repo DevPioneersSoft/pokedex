@@ -1,3 +1,4 @@
+
 import { Avatar, Menu } from "@mantine/core";
 import { useState } from "react";
 import useRegistroUsuario from "../../ejemploHooks/hooks/useRegistroUsuario";
@@ -5,13 +6,20 @@ import useLoginUsuario from "../../ejemploHooks/hooks/useLogin";
 import ModalGenerico from "./ModalGenerico";
 import FormularioLogin from "./FormularioLogin";
 import FormularioRegistro from "./FormularioRegistro";
+import { useUserStore } from "../store/userStore";
+
 
 
 export default function Session() {
   const [modalLoginAbierto, setModalLoginAbierto] = useState(false);
   const [modalRegistroAbierto, setModalRegistroAbierto] = useState(false);
-  const [usuarioLogueado, setUsuarioLogueado] = useState<string | null>(null);
-  const [estaLogueado, setEstaLogueado] = useState(false);
+  const registroMutation = useRegistroUsuario();
+  const loginMutation = useLoginUsuario();
+
+  // sacar la info del usuario del store
+  const usuario = useUserStore((state: any) => state.usuario);
+  const setUser = useUserStore((state: any) => state.setUser);
+  const logOut = useUserStore((state: any) => state.logOut);
 
   const handleIniciarSesion = () => setModalLoginAbierto(true);
   const handleCerrarModal = () => setModalLoginAbierto(false);
@@ -23,10 +31,13 @@ export default function Session() {
       { username, contrasena },
       {
         onSuccess: (data: any) => {
-          setUsuarioLogueado(username);
-          setEstaLogueado(true);
+          if (data && data.usuario) {
+            setUser({
+              id: data.usuario.id,
+              username: data.usuario.username
+            });
+          }
           setModalLoginAbierto(false);
-          console.log("Login exitoso", data);
         },
         onError: (error: any) => {
           console.error("Error al iniciar sesión", error);
@@ -36,12 +47,20 @@ export default function Session() {
   };
 
   const handleCerrarSesion = () => {
-    setUsuarioLogueado(null);
-    setEstaLogueado(false);
+    logOut();
   };
 
-  const registroMutation = useRegistroUsuario();
-  const loginMutation = useLoginUsuario();
+  // Obtener iniciales del usuario
+  const obtenerIniciales = (username: string) => {
+    if (!username) return "?";
+    const parts = username.split(" ");
+    if (parts.length === 1) return parts[0].slice(0, 2).toUpperCase();
+    return parts.map((p) => p[0]).join("").slice(0, 2).toUpperCase();
+  };
+
+  const estaLogueado = !!usuario;
+  const username = usuario?.username || "Invitado";
+  const avatarInitials = estaLogueado ? obtenerIniciales(username) : "?";
 
   return (
     <div className="mr-10">
@@ -49,16 +68,17 @@ export default function Session() {
         <Menu.Target>
           <Avatar
             size={50}
-            name="Usuario"
-            color="initials"
+            color="blue"
             className="cursor-pointer"
-            allowedInitialsColors={["var(--color-secondary-600)"]}
+            radius="xl"
             styles={{
               placeholder: {
                 backgroundColor: "white",
               },
             }}
-          />
+          >
+            {avatarInitials}
+          </Avatar>
         </Menu.Target>
         <Menu.Dropdown>
           <Menu.Label
@@ -67,7 +87,7 @@ export default function Session() {
               fontSize: 14
             }}
           >
-            {estaLogueado ? usuarioLogueado : "Invitado"}
+            {username}
           </Menu.Label>
           {!estaLogueado ? (
             <>

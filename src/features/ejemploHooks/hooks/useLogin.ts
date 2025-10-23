@@ -1,4 +1,4 @@
-import { useMutation, useQuery } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 
 const apiUrl = import.meta.env.VITE_API_URL;
 
@@ -12,6 +12,7 @@ export default function useLoginUsuario(): any {
                     headers: {
                         'Content-Type': 'application/json',
                     },
+                    credentials: 'include',
                     body: JSON.stringify(data),
                 });
                 if (!response.ok) throw new Error('Error al iniciar sesión');
