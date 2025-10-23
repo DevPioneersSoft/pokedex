@@ -1,9 +1,11 @@
 import { Avatar, Menu } from "@mantine/core";
 import { useState } from "react";
 import ModalSesion from "./ModalSesion";
+import { useUserStore } from "../store/userStore";
 
 export default function Sesion() {
-    const [modal, setModal] = useState(false)
+  const [modal, setModal] = useState(false);
+  const usuario = useUserStore((state) => state.usuario);
 
     return (
         <>
