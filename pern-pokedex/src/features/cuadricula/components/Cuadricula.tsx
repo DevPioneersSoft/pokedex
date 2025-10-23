@@ -36,7 +36,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     <>
       <input
         type="text"
-        onKeyUp={(e) => searchPokemones(e.currentTarget.value)}
+        onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
         className="bg-secondary-200 rounded-lg p-2"
         placeholder="Buscar:"
       />
