@@ -5,6 +5,7 @@ import { useForm } from 'react-hook-form';
 import { z } from 'zod'
 import { useRegistro } from '../../login/hooks/useRegistro';
 import { useLogin } from '../../login/hooks/useLogin';
+import { useUserStore } from '../store/userStore';
 
 const login = z.object({
     username: z.string().min(8, { message: 'Ususario no valido' }),
@@ -21,6 +22,7 @@ type ModalSesionProps = {
 
 export default function ModalSesion({ opened, close }: ModalSesionProps) {
     const [sesion, setSesion] = useState(false);
+    const setUser = useUserStore(store => store.setUser)
 
     const { register, handleSubmit, formState } = useForm<formValue>({
         resolver: zodResolver(login),
@@ -35,7 +37,12 @@ export default function ModalSesion({ opened, close }: ModalSesionProps) {
 
     const onSubmit = (data: formValue) => {
         if (sesion) {
-            mutateLogin(data)
+            mutateLogin(data, {
+                onSuccess: (data) => {
+                    setUser(data.usuario)
+
+                }
+            })
         } else {
             mutate(data)
 

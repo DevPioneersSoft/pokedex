@@ -33,7 +33,7 @@ export function useBuscarPokemones({initialPage, initialPageSize,initialSearch,f
   };
 
   const query = useQuery({
-    queryKey: ["buscarPokemones", params,favoritos],
+    queryKey: ["buscarPokemones", params],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
       const response = await api.get<ResponsePokemons>("pokemon", {
