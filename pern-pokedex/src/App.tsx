@@ -6,13 +6,8 @@ import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview
 import { useFavoritos } from "./features/cuadricula/hooks/useFavorito";
 
 function App() {
-  const [preview, setPreview] = useState<Pokemon | null>(null);
-    const { toggleFav, agregar } = useFavoritos()
-  const handlePokemon = (pokemon: Pokemon) => {
-    setPreview(pokemon);
-    toggleFav(pokemon);
-    agregar.mutate();
-  };
+  const [preview, setPreview] = useState<Pokemon | null>(null)
+
   return (
     <>
       <div className="min-h-screen min-w-screen bg-gradient-to-br from-secondary-400 to-secondary-900 pb-10">

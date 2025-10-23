@@ -1,3 +1,4 @@
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useMemo, useState } from "react";
 import api from "../../../shered/api";
@@ -6,10 +7,10 @@ import type { ResponsePokemon } from "../interfaces/Pokemon.interface";
 
 
 export interface UseBuscarPokemonesParams {
-    initialPage?: number
-    initialPageSize?: number
-    initialSearch?: string
-    favoritos: number[]
+  initialPage?: number;
+  initialPageSize?: number;
+  initialSearch?: string;
+  favoritos:number[]
 }
 
 export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
@@ -30,10 +31,38 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
 
     }
 
-    const params = {
-        skip: (page - 1) * pageSize,
-        take: pageSize,
-        ...(where ? { where: JSON.stringify(where) } : {})
+  const params = {
+    skip: (page - 1) * pageSize,
+    take: pageSize,
+    ...(where ? { where: JSON.stringify(where) } : {}),
+  };
+
+  const query = useQuery({
+    queryKey: ["buscarPokemones", params],
+    queryFn: async () => {
+      await new Promise((resolve) => setTimeout(resolve, 300));
+      const response = await api.get<ResponsePokemons>("pokemon", {
+        params,
+      });
+      console.log(response.data);
+      return response.data;
+    },
+  });
+
+
+  const pokemonOrdenados =  useMemo(()=>{
+    if(!query.data?.data)
+      return []
+    
+    const lista = new Set(hookParams?.favoritos)
+    const _f = query.data.data.filter(p=> lista.has(p.id))
+    const _fr = query.data.data.filter(p=> !lista.has(p.id))
+    return [..._f, ..._fr]
+  },[query.data?.data, hookParams?.favoritos])
+
+  const nextPage = () => {
+    if (query.data?.hasNextPage) {
+      setPage((prev) => prev + 1);
     }
 
     const query = useQuery({
@@ -67,20 +96,17 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
         }
     }
 
-    const searchPokemones = (searchText: string) => {
-        setSearch(searchText)
-        setPage(1)
-    }
-
-    return {
-        pokemones: pokemonOrdenados,
-        isLoading: query.isLoading,
-        refetch: query.refetch,
-        isFetching: query.isFetching,
-        nextPage,
-        prevPage,
-        searchPokemones,
-        page,
-        totalPages: query.data?.totalPages || page
-    }
+  return {
+    pokemones: pokemonOrdenados,
+    isLoading: query.isLoading,
+    refetch: query.refetch,
+    isFetching: query.isFetching,
+    nextPage,
+    prevPage,
+    searchPokemons,
+    page,
+    totalPages: query.data?.totalPages || 0,
+    hasNextPage: query.data?.hasNextPage || false,
+    hasPrevPage: query.data?.hasPreviousPage || false,
+  };
 }
