@@ -4,6 +4,7 @@ import ModalGenerica from "../../layout/components/ModalGenerica";
 import { useModalsStack } from "@mantine/core";
 import { usePokemonDetalle } from "../hooks/usePokemonDetalles";
 import PokemonDetalles from "./PokemonDetalles";
+import useFavoritos from "../../cuadricula/hooks/useFavoritos";
 
 
 export default function PokemonPreview(pokemon: Pokemon) {
@@ -11,7 +12,9 @@ export default function PokemonPreview(pokemon: Pokemon) {
 
     const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id)
 
-    const stack = useModalsStack(["detallePokemon"])
+    const stack = useModalsStack(["detallePokemon", 'agregarFavoritos'])
+
+    const {toggleFavoritos} = useFavoritos();
 
     return (
         <>

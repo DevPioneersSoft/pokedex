@@ -12,7 +12,7 @@ export default function Sesion() {
                     <Menu.Target>
                         <Avatar
                             size={50}
-                            name="Roberto"
+                            name="Lucero Esquivel"
                             color="initials"
                             className="cursor-pointer"
                             allowedInitialsColors={["var(--color-secondary-600)"]}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ResponsePokemons } from "../interfaces/Pokemon.interface";
 import api from "../../../shered/utils/api";
@@ -7,6 +7,7 @@ export interface UseBuscarPokemonesParams {
   initialPage?: number;
   initialPageSize?: number;
   initialSearch?: string;
+  favoritos : number[];
 }
 
 export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
@@ -60,8 +61,18 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
     setPage(1);
   };
 
+  const pokemonOrdenados = useMemo(() =>{
+    if(!query.data?.data){
+      return [];
+    }
+    const lista = new Set(hookParams?.favoritos);
+    const fav = query.data?.data.filter(p => lista.has(p.id)) || [];
+    const fr = query.data?.data.filter(p => !lista.has(p.id)) || [];
+    return [...fav, ... fr];
+  },[query.data?.data, hookParams?.favoritos]);
+
   return {
-    pokemones: query.data?.data,
+    pokemones: pokemonOrdenados,
     isLoading: query.isLoading,
     refetch: query.refetch,
     isFetching: query.isFetching,
