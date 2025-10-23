@@ -1,7 +1,9 @@
+import { useState } from "react";
 import { useFavoritos } from "../../layout/hooks/useFavoritos";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
+import ButtonCustom from "../../layout/components/ButtonCustom";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
@@ -9,7 +11,13 @@ interface CuadriculaProps {
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
 
-  const {favoritos} = useFavoritos();
+  const {favoritos, agregar, toggleFavorito} = useFavoritos();
+  const [selectedId, setSelectedId] = useState<number | null>(null);
+
+  const handleSelect = (p: Pokemon) => {
+    setSelectedId(p.id);
+    callback?.(p);
+  };
 
   const {
     pokemones,
@@ -33,13 +41,23 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
         className="bg-secondary-200 rounded-lg p-2"
         placeholder="Buscar:"
       />
+
+      <ButtonCustom
+        label={agregar.isPending ? "Guardando..." : "Agregar a Favoritos"}
+        color="secondary"
+        className={`px-2 m-2 ${agregar.isPending ? "opacity-50 pointer-events-none" : ""}`}
+        onClick={() => agregar.mutate()}
+      />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
 
         {pokemones?.map((pokemon: Pokemon) => (
           <CardPokemon
             key={pokemon.id}
             pokemon={pokemon}
-            callback={callback}
+            onSelected={selectedId === pokemon.id}
+            callback={handleSelect}
+            isFav={favoritos.includes(pokemon.id)}
+            onToggleFavorito={toggleFavorito}
           />
         ))}
       </div>

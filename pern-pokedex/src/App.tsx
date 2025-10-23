@@ -3,14 +3,11 @@ import Cuadricula from "./features/cuadricula/components/Cuadricula";
 import Header from "./features/layout/components/Header";
 import type { Pokemon } from "./features/cuadricula/interfaces/Pokemon.interface";
 import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview";
-import { useFavoritos } from "./features/layout/hooks/useFavoritos";
 
 function App() {
   const [preview, setPreview] = useState<Pokemon | null>(null);
-  const {toggleFavorito} = useFavoritos();
   const handlePokemon = (poke: Pokemon) => {
     setPreview(poke);
-    toggleFavorito(poke);
   }
   return (
 

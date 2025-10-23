@@ -2,7 +2,6 @@ import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 import type { ResponsePokemons } from "../interfaces/Pokemon.interface";
 import api from "../../../shered/utils/api";
-import { useFavoritos } from "../../layout/hooks/useFavoritos";
 
 export interface UseBuscarPokemonesParams {
   initialPage?: number;

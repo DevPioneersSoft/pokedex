@@ -4,13 +4,13 @@ import ModalGenerica from "../../layout/components/ModalGenerica";
 import { useModalsStack } from "@mantine/core";
 import { usePokemonDetalle } from "../hooks/usePokemonDetalles";
 import PokemonDetalles from "./PokemonDetalles";
+import { useFavoritos } from "../../layout/hooks/useFavoritos";
 
 
 export default function PokemonPreview(pokemon: Pokemon) {
     const { id, imagen, nombre } = pokemon;
 
     const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id)
-
     const stack = useModalsStack(["detallePokemon"])
 
     return (
@@ -39,7 +39,7 @@ export default function PokemonPreview(pokemon: Pokemon) {
                     <div className="text-5xl font-bold">
                         #{String(id).padStart(3, "0")}
                     </div>
-                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm ">
+                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm gap-3">
                         <ButtonCustom
                             label="Ver detalles"
                             color="primary"

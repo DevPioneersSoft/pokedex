@@ -2,6 +2,7 @@ import Sesion from "./Sesion";
 import ButtonCustom from "./ButtonCustom";
 
 export default function Header() {
+
     return (
         <div className="mb-10">
             <div className="grid grid-cols-2">
