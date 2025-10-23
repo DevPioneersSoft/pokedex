@@ -1,7 +1,8 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
-import api from "../../../shered/utils/api";
+
 import { useEffect, useState } from "react";
+import api from "../../../shered/api";
  
 const useFavoritos = () => { 
     

@@ -1,9 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useMemo, useState } from "react";
-import api from "../../../shered/api";
+import api from '../../../shered/api';
 import type { ResponsePokemon } from "../interfaces/Pokemon.interface";
-
 
 
 export interface UseBuscarPokemonesParams {
@@ -14,22 +12,20 @@ export interface UseBuscarPokemonesParams {
 }
 
 export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
+  const [page, setPage] = useState(hookParams?.initialPage ?? 1);
+  const [pageSize] = useState(hookParams?.initialPageSize ?? 20);
+  const [search, setSearch] = useState(hookParams?.initialSearch ?? "");
 
-    const [page, setPage] = useState(hookParams?.initialPage ?? 1)
-    const [pageSize] = useState(hookParams?.initialPageSize ?? 24)
-    const [search, setSearch] = useState(hookParams?.initialSearch ?? "")
+  let where = undefined;
 
-    let where = undefined
-
-    if (search) {
-        const id = Number(search)
-        if (!isNaN(id) && String(id) === String(search)) {
-            where = { id }
-        } else {
-            where = { nombre: { contains: search.toString() } }
-        }
-
+  if (search) {
+    const id = Number(search);
+    if (!isNaN(id) && String(id) === String(search)) {
+      where = { id };
+    } else {
+      where = { nombre: { contains: search.toString() } };
     }
+  }
 
   const params = {
     skip: (page - 1) * pageSize,
@@ -41,7 +37,7 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
     queryKey: ["buscarPokemones", params],
     queryFn: async () => {
       await new Promise((resolve) => setTimeout(resolve, 300));
-      const response = await api.get<ResponsePokemons>("pokemon", {
+      const response = await api.get<ResponsePokemon>("pokemon", {
         params,
       });
       console.log(response.data);
@@ -64,37 +60,18 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
     if (query.data?.hasNextPage) {
       setPage((prev) => prev + 1);
     }
+  };
 
-    const query = useQuery({
-        queryKey: ["buscarPokemones", params],
-        queryFn: async () => {
-            await new Promise((resolve) => setTimeout(resolve, 300));
-            const response = await api.get<ResponsePokemon>("pokemon", { params })
-            return response.data
-        }
-    })
-
-    const pokemonOrdenados = useMemo(() => {
-        if (!query.data?.data)
-            return []
-
-        const lista = new Set(hookParams?.favoritos)
-        const _f = query.data.data.filter(p => lista.has(p.id))
-        const _fr = query.data.data.filter(p => !lista.has(p.id))
-        return [..._f, ..._fr]
-    }, [query.data?.data, hookParams?.favoritos])
-
-    const nextPage = () => {
-        if (query.data?.hasNextPage) {
-            setPage(prev => prev + 1)
-        }
+  const prevPage = () => {
+    if (query.data?.hasPreviousPage) {
+      setPage((prev) => prev - 1);
     }
+  };
 
-    const prevPage = () => {
-        if (query.data?.hasPreviousPage) {
-            setPage(prev => prev - 1)
-        }
-    }
+  const searchPokemons = (searchText: string) => {
+    setSearch(searchText);
+    setPage(1);
+  };
 
   return {
     pokemones: pokemonOrdenados,
