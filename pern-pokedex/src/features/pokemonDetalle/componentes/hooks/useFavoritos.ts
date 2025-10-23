@@ -38,8 +38,6 @@ const useFavoritos = () => {
       nuevosFavoritos = [...favoritos, pokemon.id];
       setFavoritos(nuevosFavoritos);
     }
-    
-    // Siempre enviamos la lista actualizada al backend
     agregar.mutate(nuevosFavoritos);
   };
 

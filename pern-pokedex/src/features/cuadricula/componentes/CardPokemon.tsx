@@ -21,7 +21,7 @@ export default function CardPokemon({ pokemon, esFavorito = false, onToggleFavor
   };
 
   const handleFavoritoClick = (e: React.MouseEvent) => {
-    e.stopPropagation(); // Evita que se abra el modal
+    e.stopPropagation();
     onToggleFavorito?.(pokemon);
   };
 
@@ -34,7 +34,7 @@ export default function CardPokemon({ pokemon, esFavorito = false, onToggleFavor
 
             <Card.Section p="md">
                 <Group justify="space-between" mb="xs">
-                  <Badge color="gray" variant="light" size="sm">
+                  <Badge color="blue" variant="light" size="lg">
                     #{id.toString().padStart(3, '0')}
                   </Badge>
                   <ActionIcon

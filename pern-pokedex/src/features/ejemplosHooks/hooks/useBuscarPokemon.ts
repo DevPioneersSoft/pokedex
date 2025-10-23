@@ -45,30 +45,23 @@ export function useBuscarPokemon(hooksParams?: BuscarPokemonParams) {
   });
 
   const pokemonOrdenados = useMemo(() => {
-    // Si no hay datos, retornar undefined
     if(!query.data?.data) {
       return query.data;
     }
 
-    // Si no hay favoritos, retornar los datos sin ordenar
     if(!hooksParams?.favoritos || hooksParams.favoritos.length === 0) {
       return query.data;
     }
 
-    // Ordenar: favoritos primero, luego los demás
     const pokemonsOrdenados = [...query.data.data].sort((a, b) => {
       const aEsFavorito = hooksParams.favoritos.includes(a.id);
       const bEsFavorito = hooksParams.favoritos.includes(b.id);
       
-      // Si 'a' es favorito y 'b' no, 'a' va primero
       if (aEsFavorito && !bEsFavorito) return -1;
-      // Si 'b' es favorito y 'a' no, 'b' va primero
       if (!aEsFavorito && bEsFavorito) return 1;
-      // Si ambos son favoritos o ninguno lo es, mantener orden original
       return 0;
     });
 
-    // Retornar el objeto completo con los datos ordenados
     return {
       ...query.data,
       data: pokemonsOrdenados
