@@ -32,7 +32,7 @@ export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, 
         if (sesion) {
             crearUsuario(data)
         } else {
-            mutate(data)
+           mutate(data)
         }
     }
     return (
@@ -42,8 +42,8 @@ export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, 
             <form onSubmit={form.handleSubmit(onSubmit)}>
                 <Input placeholder="usuario" {...form.register('username')} error={form.formState.errors.username?.message} />
                 <Input type="password" placeholder="contraseña" {...form.register('contrasena')} error={form.formState.errors.contrasena?.message} />
-                <ButtonCustom type='submit' color="primary" label="Iniciar sesión" />
-                <ButtonCustom type="button" color="secondary" onClick={() => setSesion((prev) => !prev)} label={sesion ? 'Iniciar Sesión' : 'Registrarse'} />
+            
+                <ButtonCustom type="submit" color="secondary" onClick={() => setSesion((prev) => !prev)} label={sesion ? 'Iniciar Sesión' : 'Registrarse'} />
             </form>
 
         </Modal>

@@ -8,7 +8,7 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
-  const {favoritos} =  useFavoritos()
+  const {favoritos,toggleFav,agregar} =  useFavoritos()
  
   const {
     pokemones,
@@ -26,6 +26,13 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
   
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
+  const callbackFav=async(p : Pokemon)=>{
+    if (callback){
+      callback(p);
+    }
+    toggleFav(p);
+    await agregar.mutateAsync();
+  }
   return (
     <>
       <input
@@ -36,13 +43,15 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
       />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
 
-        {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon
+        {pokemones?.map((pokemon: Pokemon) => {
+          const select = favoritos.includes(pokemon.id)
+         return ( <CardPokemon
             key={pokemon.id}
             pokemon={pokemon}
-            callback={callback}
-          />
-        ))}
+            callback={callbackFav}
+            select={select}
+          />)
+        })}
       </div>
       {pokemones && (
         <div className="flex justify-center items-center mt-4 gap-2">
