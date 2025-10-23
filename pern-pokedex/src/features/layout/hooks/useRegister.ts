@@ -6,8 +6,8 @@ const useRegister = () => {
         mutationFn: async (
             data: { 
                 username: string;
-                contraseña: string }) => {
-                    const response = await api.post("usuario ", data);
+                contrasena: string }) => {
+                    const response = await api.post("usuario", data);
                     return response.data;
                 }
     })

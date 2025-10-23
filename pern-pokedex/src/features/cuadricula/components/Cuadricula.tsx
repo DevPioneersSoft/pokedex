@@ -9,7 +9,8 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
-  const {favoritos} = useFavoritos()
+  const { favoritos, toggleFav, agregar } = useFavoritos(); // centralized
+  const [busqueda, setBusqueda] = useState("");
 
   const {
     pokemones,
@@ -28,13 +29,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     favoritos
   });
 
-
-  const [busqueda, setBusqueda] = useState("");
-
-  const handleSearch = () => {
-    searchPokemons(busqueda.trim());
-  };
-
+  const handleSearch = () => searchPokemons(busqueda.trim());
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -71,7 +66,9 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
           <CardPokemon 
             key={pokemon.id} 
             pokemon={pokemon} 
-            callback={callback} 
+            callback={callback}
+            esFavorito={favoritos.includes(pokemon.id)}
+            toggleFav={() => { toggleFav(pokemon); agregar.mutate(); }}
           />
         ))}
       </div>
