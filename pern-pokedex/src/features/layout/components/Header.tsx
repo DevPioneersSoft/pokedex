@@ -1,7 +1,15 @@
 import Sesion from "./Sesion";
 import ButtonCustom from "./ButtonCustom";
+import { useUserStore } from "../store/userStore";
+
+
+
 
 export default function Header() {
+
+    
+
+
     return (
         <div className="mb-10">
             <div className="grid grid-cols-2">

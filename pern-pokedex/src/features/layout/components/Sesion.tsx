@@ -1,7 +1,7 @@
 import { Avatar, Menu, Modal } from "@mantine/core";
 import { useState } from "react";
-import ModalGenerica from "./ModalGenerica";
 import { ModalSesion } from "./ModalSesion";
+import { useUserStore } from "../store/userStore";
 
 
 
@@ -10,14 +10,15 @@ export default function Sesion() {
 const [modalAbierto, setModalAbierto] = useState(false);
 const abrirModalSesion = () => setModalAbierto(true);
 const cerrarModalSesion = () => setModalAbierto(false); 
-   
+const { usuario } = useUserStore();
+
   return (
         <div className="mr-10">
             <Menu shadow="md" width={200}>
                 <Menu.Target>
                     <Avatar
                         size={50}
-                        name="Usuario"
+                        name={usuario ? usuario.usuario.username : "Invitado"}
                         color="initials"
                         className="cursor-pointer"
                         allowedInitialsColors={["var(--color-secondary-600)"]}
@@ -35,7 +36,7 @@ const cerrarModalSesion = () => setModalAbierto(false);
                             fontSize: 14
                         }}
                     >
-                        Invitado
+                        {usuario ? usuario.usuario.username : "Invitado"}
                     </Menu.Label>
                     <Menu.Item
                         styles={{
@@ -51,7 +52,7 @@ const cerrarModalSesion = () => setModalAbierto(false);
                 </Menu.Dropdown>
             </Menu>
 
-                <ModalSesion abierto={modalAbierto} onClose={cerrarModalSesion} />
+                <ModalSesion abierto={modalAbierto} onClose={cerrarModalSesion}  />
         </div>
     )
 }

@@ -5,6 +5,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { Input } from '@mantine/core';
 import { userCrearCuentaHook, useLoginHook } from '../../pokemonDetalles/hooks/useRegistroHook';
 import ModalGenerica from './ModalGenerica';
+import { useUserStore } from '../store/userStore';
 
 const LOGIN  = z.object({
     username: z.string().min(1, 'El nombre de usuario es obligatorio'),
@@ -30,14 +31,22 @@ export  function ModalSesion( {abierto, onClose } : ModalSesionProps ) {
 });
 const { mutate: mutateLogin } = useLoginHook();
 const { mutate: mutateCrearCuenta } = userCrearCuentaHook();
+const { setUser } = useUserStore();
 
     const onSubmit = (data : formValues) => {
         
 
-        if(sesion){
+        if (sesion) {
             mutateCrearCuenta(data);
         } else {
-            mutateLogin(data);
+            mutateLogin(data,{
+                onSuccess: (data) => {
+                    setUser(data);
+                    onClose();
+                    form.reset();
+                }
+            });
+            // Lógica para manejar el envío del formulario
         }
         // Lógica para manejar el envío del formulario
     }
