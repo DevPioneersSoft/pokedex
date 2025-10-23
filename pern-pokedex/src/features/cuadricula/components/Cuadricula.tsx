@@ -8,8 +8,8 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
-  const {favoritos} =  useFavoritos()
- 
+  const { favoritos, agregar, toggleFav } = useFavoritos()
+
   const {
     pokemones,
     isLoading,
@@ -23,7 +23,15 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     searchPokemons,
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
 
-  
+  const onClickPokemon = async (pokemon: Pokemon) => {
+    toggleFav(pokemon);
+    await agregar.mutateAsync();
+    if (callback) {
+      callback(pokemon);
+    }
+  };
+
+
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
@@ -36,13 +44,27 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
       />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
 
-        {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon
+        {pokemones?.map((pokemon: Pokemon) => {
+          const isSelected = favoritos.includes(pokemon.id);
+
+          return <div
             key={pokemon.id}
-            pokemon={pokemon}
-            callback={callback}
-          />
-        ))}
+            style={{
+              background: favoritos.includes(pokemon.id)
+                ? "#ffe066"
+                : undefined,
+            }}
+            className={`w-28 rounded-xl relative ${isSelected ? "ring-4 ring-yellow-600" : ""
+              }`}
+          >
+            <CardPokemon
+              key={pokemon.id}
+              pokemon={pokemon}
+              callback={onClickPokemon}
+            />
+
+          </div>
+        })}
       </div>
       {pokemones && (
         <div className="flex justify-center items-center mt-4 gap-2">
