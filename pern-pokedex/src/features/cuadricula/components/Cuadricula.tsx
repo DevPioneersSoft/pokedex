@@ -6,10 +6,11 @@ import CardPokemon from "./CardPokemon";
 import ButtonCustom from "../../layout/components/ButtonCustom";
 
 interface CuadriculaProps {
-  callback?: (pokemon: Pokemon) => void
+  callback?: (pokemon: Pokemon) => void,
+  registrarFavoritos?: boolean
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback , registrarFavoritos = true}: CuadriculaProps) {
 
   const {favoritos, agregar, toggleFavorito} = useFavoritos();
   const [selectedId, setSelectedId] = useState<number | null>(null);
@@ -17,6 +18,15 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
   const handleSelect = (p: Pokemon) => {
     setSelectedId(p.id);
     callback?.(p);
+  };
+
+  const onClickPokemon = async (pokemon: Pokemon) => {
+    if (callback) {
+      callback(pokemon);
+    }
+    if (!registrarFavoritos) return;
+    toggleFavorito(pokemon);
+    await agregar.mutateAsync();
   };
 
   const {
@@ -55,7 +65,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
             key={pokemon.id}
             pokemon={pokemon}
             onSelected={selectedId === pokemon.id}
-            callback={handleSelect}
+            callback={() => onClickPokemon(pokemon)} // Use onClickPokemon here
             isFav={favoritos.includes(pokemon.id)}
             onToggleFavorito={toggleFavorito}
           />
