@@ -1,12 +1,15 @@
-import { Container, Grid, Button, Group, Title, TextInput, Stack, Text, Loader, Card, Image, Badge, ActionIcon } from '@mantine/core'
+import { Container, Grid, Button, Group, Title, TextInput, Stack, Text, Loader } from '@mantine/core'
 import { useState, useEffect } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
-import { IconX } from '@tabler/icons-react';
 import CardPokemon from './CardPokemon';
+import CardPokemonEquipo from './CardPokemonEquipo';
 import { useBuscarPokemon } from '../../ejemplosHooks/hooks/useBuscarPokemon';
 import useFavoritos from '../../pokemonDetalle/componentes/hooks/useFavoritos';
 import type { Pokemon } from '../../layout/components/Pokemon';
 import useEquipoRegistrar from '../../pokemonDetalle/componentes/hooks/useEquipoRegistrar';
+import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
+import useEquipoUsuario from '../../pokemonDetalle/componentes/hooks/useEquipoUsuario';
+import { useUserStore } from '../../layout/store/userStore';
 
 export default function CuadriculaEquipo() {
 
@@ -16,6 +19,21 @@ export default function CuadriculaEquipo() {
   const {favoritos, toggleFavorito} = useFavoritos();
   const { pokemons, cargando, error, refrescando, refetch, nextPage, prevPage, searchPokemon, paginaActual, totalPaginas, hasNextPage, hasPreviousPage } = useBuscarPokemon({ favoritos });
   const equipoMutation = useEquipoRegistrar();
+  const equipoUsuario = useEquipoUsuario();
+  const setEquipoPokemon = useUserStore(state => state.setEquipoPokemon);
+
+  useEffect(() => {
+    equipoUsuario.mutate(undefined, {
+      onSuccess: (data) => {
+        setPokemonSeleccionados(data);
+        setEquipoPokemon(data);
+      }
+    });
+  }, []);
+
+  useEffect(() => {
+    setEquipoPokemon(pokemonSeleccionados);
+  }, [pokemonSeleccionados, setEquipoPokemon]);
 
   const agregarALista = (pokemon: Pokemon) => {
     setPokemonSeleccionados(prev => {
@@ -74,7 +92,52 @@ export default function CuadriculaEquipo() {
     );
   }
 
+  //Draggable functions
+  const reorder = (list: Pokemon[], startIndex: number, endIndex: number) => {
+    const result = Array.from(list);
+    const [removed] = result.splice(startIndex, 1);
+    result.splice(endIndex, 0, removed);
+
+    return result;
+  };
+
+  const grid = 1;
+
+  const getItemStyle = (isDragging: boolean, draggableStyle: any) => ({
+    userSelect: "none",
+    padding: grid * 2,
+    margin: `0 0 ${grid}px 0`,
+
+    background: isDragging ? "rgba(100, 200, 100, 0.3)" : "transparent",
+    borderRadius: isDragging ? "8px" : "0",
+    boxShadow: isDragging ? "0 4px 12px rgba(0, 0, 0, 0.3)" : "none",
+
+    ...draggableStyle
+  });
+
+  const getListStyle = (isDraggingOver: boolean) => ({
+    background: isDraggingOver ? "rgba(100, 150, 255, 0.2)" : "transparent",
+    padding: grid,
+    width: "100%"
+  });
+  
+
+  const onDragEnd = (result: any) => {
+    if (!result.destination) {
+      return;
+    }
+
+    const items = reorder(
+      pokemonSeleccionados,
+      result.source.index,
+      result.destination.index
+    );
+
+    setPokemonSeleccionados(items);
+  }
+
   return (
+    
     <Container size="xl" py="xl">
       <Grid gutter="xl">
         
@@ -146,54 +209,58 @@ export default function CuadriculaEquipo() {
             <Group justify="space-between">
               <Title order={3} c="white">Equipo Seleccionado</Title>
               {pokemonSeleccionados.length > 0 && (
-                <Button size="xs" variant="subtle" color="red" onClick={limpiarLista}>
+                <Button size="xs" variant="subtle" color="primary" onClick={limpiarLista}>
                   Limpiar Lista
                 </Button>
               )}
             </Group>
             
             {pokemonSeleccionados.length === 0 ? (
-              <Text c="dimmed" ta="center" style={{ marginTop: '2rem' }}>
+              <Text size="sm" c="white" ta="center" style={{ marginTop: '2rem' }}>
                 Haz clic en un Pokémon para agregarlo a tu equipo
               </Text>
             ) : (
               <Stack gap="sm" style={{ maxHeight: '70vh', overflowY: 'auto' }}>
-                {pokemonSeleccionados.map((pokemon) => (
-                  <Card key={pokemon.id} padding="sm" style={{ backgroundColor: 'rgba(255, 255, 255, 0.1)' }}>
-                    <Group gap="sm">
-                      <Image 
-                        src={pokemon.imagen} 
-                        alt={pokemon.nombre} 
-                        w={50} 
-                        h={50} 
-                        fit="contain"
-                        style={{ backgroundColor: 'rgba(255, 255, 255, 0.8)', borderRadius: '4px' }}
-                      />
-                      <Stack gap={2} style={{ flex: 1 }}>
-                        <Text fw={600} c="white" tt="capitalize">
-                          {pokemon.nombre}
-                        </Text>
-                        <Badge size="xs" color="blue" variant="light">
-                          #{pokemon.id.toString().padStart(3, '0')}
-                        </Badge>
-                      </Stack>
-                      <ActionIcon
-                        variant="subtle"
-                        color="red"
-                        size="sm"
-                        onClick={() => removerDeLista(pokemon.id)}
+                <DragDropContext onDragEnd={onDragEnd}>
+                  <Droppable droppableId="droppable">
+                    {(provided, snapshot) => (
+                      <div
+                        {...provided.droppableProps}
+                        ref={provided.innerRef}
+                        style={getListStyle(snapshot.isDraggingOver)}
                       >
-                        <IconX size={16} />
-                      </ActionIcon>
-                    </Group>
-                  </Card>
-                ))}
+                        {pokemonSeleccionados.map((pokemon, index) => (
+                          <Draggable key={pokemon.id} draggableId={pokemon.id.toString()} index={index}>
+                            {(provided, snapshot) => (
+                              <div
+                                ref={provided.innerRef}
+                                {...provided.draggableProps}
+                                {...provided.dragHandleProps}
+                                style={getItemStyle(
+                                  snapshot.isDragging,
+                                  provided.draggableProps.style
+                                )}
+                              >
+                                <CardPokemonEquipo 
+                                  key={pokemon.id} 
+                                  pokemon={pokemon}
+                                  onRemover={removerDeLista}
+                                />
+                              </div>
+                            )}
+                          </Draggable>
+                        ))}
+                        {provided.placeholder}
+                      </div>
+                    )}
+                  </Droppable>
+                </DragDropContext>
               </Stack>
             )}
             
             {pokemonSeleccionados.length > 0 && (
               <Stack gap="sm">
-                <Text size="sm" c="dimmed" ta="center">
+                <Text size="sm" c="white" ta="center">
                   {pokemonSeleccionados.length} Pokémon en tu equipo
                 </Text>
                 <Button 

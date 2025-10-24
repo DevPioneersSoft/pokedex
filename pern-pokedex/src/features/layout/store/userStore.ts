@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import type { Pokemon } from '../components/Pokemon'
 
 interface UserDto {
     id: number
@@ -7,7 +8,9 @@ interface UserDto {
 
 type UserStore = {
   usuario: UserDto | null
+  equipoPokemon: Pokemon[]
   setUser: (usuario: UserDto | null) => void
+  setEquipoPokemon: (equipo: Pokemon[]) => void
   logout: () => void
 }
 
@@ -16,6 +19,7 @@ export const useUserStore = create<UserStore>((set) => {
     const initialUsuario = usuarioLocalStorage ? JSON.parse(usuarioLocalStorage) : null;
     return {
         usuario: initialUsuario,
+        equipoPokemon: [],
         setUser: (usuario) => { 
             set({ usuario });
             if (usuario) {
@@ -24,8 +28,11 @@ export const useUserStore = create<UserStore>((set) => {
                 localStorage.removeItem('usuario');
             }
         },
+        setEquipoPokemon: (equipo) => {
+            set({ equipoPokemon: equipo });
+        },
         logout: () => {
-            set({ usuario: null });
+            set({ usuario: null, equipoPokemon: [] });
             localStorage.removeItem('usuario');
         },
     }
