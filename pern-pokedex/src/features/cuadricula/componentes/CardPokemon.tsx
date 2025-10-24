@@ -11,13 +11,17 @@ interface CardPokemonProps {
   onToggleFavorito?: (pokemon: Pokemon) => void;
 }
 
-export default function CardPokemon({ pokemon, esFavorito = false, onToggleFavorito }: CardPokemonProps) {
+export default function CardPokemon({ pokemon, callback, esFavorito = false, onToggleFavorito }: CardPokemonProps) {
   const { openModal } = usePokemonModal();
   const { id, nombre, imagen } = pokemon;
   const styleSpan = { xs: 6, sm: 4, md: 3 };
 
   const handleClick = () => {
-    openModal(pokemon);
+    if (callback) {
+      callback(pokemon);
+    } else {
+      openModal(pokemon);
+    }
   };
 
   const handleFavoritoClick = (e: React.MouseEvent) => {

@@ -9,7 +9,7 @@ export default function Cuadricula() {
 
   const [busqueda, setBusqueda] = useState('');
   const [debouncedBusqueda] = useDebouncedValue(busqueda, 500); // Espera 500ms después de que el usuario deje de escribir
-  const {favoritos, toggleFavorito, agregar} = useFavoritos();
+  const {favoritos, toggleFavorito} = useFavoritos();
   const { pokemons, cargando, error, refrescando, refetch, nextPage, prevPage, searchPokemon, paginaActual, totalPaginas, hasNextPage, hasPreviousPage } = useBuscarPokemon({ favoritos });
 
   useEffect(() => {

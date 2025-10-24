@@ -38,6 +38,7 @@ export default function ModalSesion({ onOpened, onClose } : { onOpened: boolean,
   }); 
 
   const onSubmit = (data: FormData) => {
+    console.log('Formulario enviado con datos:', data);
     setErrorMessage(null); // Limpiar errores anteriores
     
     if (sesion) {

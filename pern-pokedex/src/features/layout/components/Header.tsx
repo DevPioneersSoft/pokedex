@@ -1,7 +1,9 @@
 import Session from "./Session";
 import ButtonCustom from "./ButtonCustom";
+import { useNavigate } from "react-router";
 
 export default function Header() {
+    const navigate = useNavigate();
   return (
     <div className='mb-10'>
         <div className="grid grid-cols-2">
@@ -16,8 +18,9 @@ export default function Header() {
                                 label="Mi equipo"
                                 color="warning"
                                 className="ml-10"
-                                isLoading={true}
-                                />
+                                isLoading={false}
+                                onClick={ () => {navigate('/mi-equipo')} }  
+                            />  
                         </div>
                         <div className="flex space-x-4">
                         </div>
