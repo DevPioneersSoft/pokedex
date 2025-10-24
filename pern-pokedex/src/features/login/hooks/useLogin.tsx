@@ -1,10 +1,8 @@
 import { useMutation } from "@tanstack/react-query"
 import type { formValue } from "../../layout/components/ModalSesion"
 import api from "../../../shered/utils/api"
-import { useUserStore } from "../../layout/store/userStore"
 
 export const useLogin= ( ) => {
-    const setUser = useUserStore(store => store.setUser)
     return useMutation({
         mutationFn: async (data : formValue) => {
             try {

@@ -1,3 +1,4 @@
+import { boolean } from "zod";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import { useFavoritos } from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
@@ -5,11 +6,24 @@ import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
-  favoritos: number[]
+  agregarFavorito?: boolean
+  // favoritos: number[]
 }
 
-export default function Cuadricula({ callback,favoritos }: CuadriculaProps) {
-  // const { favoritos } = useFavoritos();
+export default function Cuadricula({ callback, agregarFavorito = true }: CuadriculaProps) {
+
+  const { toggleFav, agregarfavorito, favoritos } = useFavoritos();
+
+  const handlePokemon = (pokemon: Pokemon) => {
+    if (agregarFavorito) {
+      toggleFav(pokemon)
+      agregarfavorito.mutate();
+    }
+
+    if (callback)
+      callback(pokemon)
+  }
+
   const {
     pokemones,
     isLoading,
@@ -25,7 +39,7 @@ export default function Cuadricula({ callback,favoritos }: CuadriculaProps) {
 
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
-  console.log( favoritos );
+
   return (
     <>
       <input
@@ -40,7 +54,7 @@ export default function Cuadricula({ callback,favoritos }: CuadriculaProps) {
           <CardPokemon
             key={pokemon.id}
             pokemon={pokemon}
-            callback={callback}
+            callback={handlePokemon}
             isFavorite={favoritos.includes(pokemon.id)}
           />
         ))}

@@ -22,9 +22,9 @@ type ModalSesionProps = {
 
 export default function ModalSesion({ opened, close }: ModalSesionProps) {
     const [sesion, setSesion] = useState(false);
-    const setUser = useUserStore(store => store.setUser)
+    const setUser = useUserStore(state => state.setUser)
 
-    const { register, handleSubmit, formState } = useForm<formValue>({
+    const { register, handleSubmit, formState, reset } = useForm<formValue>({
         resolver: zodResolver(login),
         defaultValues: {
             username: '',
@@ -40,11 +40,16 @@ export default function ModalSesion({ opened, close }: ModalSesionProps) {
             mutateLogin(data, {
                 onSuccess: (data) => {
                     setUser(data.usuario)
-
+                    reset()
+                    close()
                 }
             })
         } else {
-            mutate(data)
+            mutate(data,{
+                onSuccess: () => {
+                    reset()
+                }
+            })
 
         }
     }
