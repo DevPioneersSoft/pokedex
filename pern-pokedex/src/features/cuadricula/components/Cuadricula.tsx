@@ -4,10 +4,11 @@ import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
-  callback?: (pokemon: Pokemon) => void
+  callback?: (pokemon: Pokemon) => void,
+  registrarFavortios?: boolean
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback, registrarFavortios = true }: CuadriculaProps) {
   const { favoritos, agregar, toggleFav } = useFavoritos()
 
   const {
@@ -24,11 +25,12 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
 
   const onClickPokemon = async (pokemon: Pokemon) => {
-    toggleFav(pokemon);
-    await agregar.mutateAsync();
     if (callback) {
       callback(pokemon);
     }
+    if (!registrarFavortios) return
+    toggleFav(pokemon);
+    await agregar.mutateAsync();
   };
 
 
