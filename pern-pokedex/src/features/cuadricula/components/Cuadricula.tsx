@@ -6,9 +6,10 @@ import useFavoritos from "../hooks/useFavoritos";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void;
+  permitirFavoritos?: boolean;
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback, permitirFavoritos }: CuadriculaProps) {
   const { favoritos, toggleFav, agregar } = useFavoritos(); // centralized
   const [busqueda, setBusqueda] = useState("");
 
@@ -37,6 +38,11 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     }
   };
 
+  const handleToggleFav = (pokemon: Pokemon) => {
+    toggleFav(pokemon);
+    if (permitirFavoritos) agregar.mutate();
+  };
+
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
 
@@ -62,15 +68,18 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
 
       {/* Pokemones */}
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
-        {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon 
-            key={pokemon.id} 
-            pokemon={pokemon} 
-            callback={callback}
-            esFavorito={favoritos.includes(pokemon.id)}
-            toggleFav={() => { toggleFav(pokemon); agregar.mutate(); }}
-          />
-        ))}
+        {pokemones?.map((pokemon: Pokemon) => {
+          const esFavorito = permitirFavoritos ? favoritos.includes(pokemon.id) : false;
+          return (
+            <CardPokemon
+              key={pokemon.id}
+              pokemon={pokemon}
+              callback={callback}
+              esFavorito={esFavorito}
+              toggleFav={() => handleToggleFav(pokemon)}
+            />
+          );
+        })}
       </div>
 
       {/* Paginacion */}

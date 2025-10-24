@@ -40,6 +40,7 @@ export default function Pokedex(){
                 >
                 <Cuadricula
                     callback={(pokemon: Pokemon) => handlePokemon(pokemon)}
+                    permitirFavoritos={true}
                 />
                 </div>
 
