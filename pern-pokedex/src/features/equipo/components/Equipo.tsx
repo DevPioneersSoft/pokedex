@@ -1,5 +1,5 @@
 import Cuadricula from "../../cuadricula/components/Cuadricula";
-import { useEquipoStore } from "../store/EquiopoStore";
+import { useEquipoStore } from "../store/EquipoStore";
 import EquipoList from "./EquipoList";
 
 export default function Equipo() {

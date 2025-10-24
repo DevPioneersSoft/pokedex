@@ -1,25 +1,37 @@
-import { useMutation } from "@tanstack/react-query"
-import { useEquipoStore } from "../../equipo/store/EquiopoStore";
+import { useMutation, useQuery } from "@tanstack/react-query"
+import { useEquipoStore } from "../../equipo/store/EquipoStore";
 import api from "../../../shered/utils/api";
+import type { Pokemon } from "../interfaces/Pokemon.interface";
 
-const guardarEquipo = async (ids: number[]) => {
-    const { data } = await api.post('/equipo', ids.map(pokemonId => ({pokemonId})))
+const guardarEquipoApi = async (ids: number[]) => {
+    const { data } = await api.post('/equipo', ids.map(pokemonId => ({ pokemonId })))
     return data;
 }
 
 export const useEquipo = () => {
-    const { equipo } = useEquipoStore();
+    const { equipo, addEquipo } = useEquipoStore();
+    const { isFetching } = useQuery({
+        queryKey: ['equipo'],
+        queryFn: async () => {
+            const { data } = await api<Pokemon[]>('/usuario/equipo');
+            addEquipo(data)
+            return data;
+        },
 
-    return useMutation({
+    });
+
+    const guardarEquipo = useMutation({
         mutationFn: async () => {
             const ids = equipo.map((p) => p.id);
-            return guardarEquipo(ids);
+            return guardarEquipoApi(ids);
         },
         onSuccess: () => {
-            console.log( 'Equipo Guardado' );
+            console.log('Equipo Guardado');
         },
         onError: (error) => {
-            console.log( 'error' );
+            console.log('error');
         },
     });
+
+    return { guardarEquipo, isLoading: isFetching }
 }

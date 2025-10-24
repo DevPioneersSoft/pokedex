@@ -5,6 +5,7 @@ type EquipoStore = {
     equipo: Pokemon[],
     addPokemon: (pokemon: Pokemon) => void,
     removePokemon: (pokemonId: number) => void,
+    addEquipo: (equipo: Pokemon[]) => void,
     resetEquipo: () => void
 }
 export const useEquipoStore = create<EquipoStore>()((set) => ({
@@ -19,5 +20,6 @@ export const useEquipoStore = create<EquipoStore>()((set) => ({
     removePokemon: (pokemonId) => {
         set(state => ({ equipo: state.equipo.filter(p => p.id !== pokemonId) }))
     },
-    resetEquipo: () => set(state => ({ equipo: [] }))
+    resetEquipo: () => set(() => ({ equipo: [] })),
+    addEquipo: (equipo) => set(() =>  ({equipo})) 
 }))
