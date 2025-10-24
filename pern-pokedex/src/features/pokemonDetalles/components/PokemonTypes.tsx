@@ -1,4 +1,3 @@
-
 const typeColors: Record<string, string> = {
     normal: "bg-gray-400 text-black",
     fire: "bg-red-500 text-white",
@@ -18,11 +17,11 @@ const typeColors: Record<string, string> = {
     dark: "bg-gray-800 text-white",
     steel: "bg-slate-400 text-black",
     fairy: "bg-pink-300 text-black",
-};
+}
 
 interface PokemonTypesProps {
-    types: string[];
-};
+    types: string[]
+}
 
 export default function PokemonTypes({ types }: PokemonTypesProps) {
     return (
@@ -30,15 +29,14 @@ export default function PokemonTypes({ types }: PokemonTypesProps) {
             {types.map((type) => (
                 <span
                     key={type}
-                    className={`
-            px-3 py-1 rounded-full font-mono font-bold uppercase text-lg
-            border-2 border-black shadow-md
-            ${typeColors[type] ?? "bg-gray-300 text-black"}
-          `}
-                >
+                    className={` 
+                        px-3 py-1 rounded-full font-mono font-bold uppercase 
+                        border-2 border-black shadow-md
+                        ${typeColors[type] ?? "bg-gray-300 text-black"} 
+                    `}>
                     {type}
                 </span>
             ))}
         </div>
-    );
+    )
 }

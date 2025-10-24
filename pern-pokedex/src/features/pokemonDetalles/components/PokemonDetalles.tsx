@@ -1,18 +1,16 @@
-import { Flex, Grid, Group, Image, Progress, Space, Stack, Text } from "@mantine/core";
 
-import ButtonCustom from "../../layout/components/ButtonCustom";
-import PokemonTypes from "./PokemonTypes";
-import type { PokemonDetalle } from "../types/detallePokemon.interface";
+import { Button } from "@mantine/core";
 import { usePokemonFile } from "../hooks/usePokemonFile";
+import type { PokemonDetalle } from "../types/detallePokemon.interface";
+import PokemonTypes from "./PokemonTypes";
 
 
 interface PokemonDetallesProps {
-    pokemon: PokemonDetalle;
+    pokemon: PokemonDetalle
 }
 
-const MAX_STAT_VALUE = 255;
-
 export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
+
     const {
         imagen,
         id,
@@ -20,73 +18,81 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
         nombre,
         descripcion,
         tipoPokemon,
+        vida,
+        ataque,
+        defensa,
+        velocidad,
+        ataqueEspecial,
+        defensaEspecial,
         ...stats
     } = pokemon
 
     const { refetch, isFetching } = usePokemonFile(pokemon.id)
 
+    return (
+        <div className="relative flex flex-col md:flex-row items-center p-8 rounded-3xl border border-white overflow-hidden">
+            <div className="absolute inset-0 overflow-hidden rounded-3xl pointer-events-none">
+                <div className="absolute inset-0" />
+            </div>
+            <div className="flex flex-col items-center text-center md:w-1/2 z-10">
+                <div className="absolute inset-0 z-0">
+                    <img src={imagen} alt={`${nombre} background`} className="w-full h-full object-contain opacity-10 scale-125 grayscale" />
+                </div>
+                <div className="relative">
+                    <img
+                        src={imagen}
+                        alt={nombre}
+                        className="w-48 h-48 object-contain rounded-2xl bg-white shadow-md border border-white"
+                    />
+                    <span className="absolute top-2 right-2 bg-white/80 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold">
+                        #{String(id).padStart(3, "0")}
+                    </span>
+                </div>
 
-    function formatearNombre(nombre: string) {
-        const nombresLegibles: Record<string, string> = {
-            vida: 'Vida',
-            ataque: 'Ataque',
-            defensa: 'Defensa',
-            ataqueEspecial: 'Ataque Especial',
-            defensaEspecial: 'Defensa Especial',
-            velocidad: 'Velocidad',
-        };
-        return nombresLegibles[nombre] || nombre;
+                <h2 className="mt-4 text-3xl font-bold tracking-wide text-gray-800 drop-shadow-sm">
+                    {nombre.toUpperCase()}
+                </h2>
+
+                <PokemonTypes types={tipoPokemon.map((t) => t.nombre)} />
+            </div>
+
+            <div className="md:w-1/2 flex flex-col gap-5 z-10 w-full">
+                <div className="flex flex-col gap-3 w-full">
+                    <StatItem color="red" label="HP" value={vida} icon="❤️" />
+                    <StatItem color="yellow" label="Velocidad" value={velocidad} icon="⚡" />
+                    <StatItem color="orange" label="Ataque" value={`${ataque} / ✨ ${ataqueEspecial}`} icon="⚔️" />
+                    <StatItem color="blue" label="Defensa" value={`${defensa} / ✨ ${defensaEspecial}`} icon="🛡️" />
+                </div>
+
+                <p className="text-gray-700 text-sm leading-relaxed text-justify p-4 rounded-xl">
+                    {descripcion}
+                </p>
+
+                <audio controls>
+                    <source src={grunido} type="audio/mpeg" />
+                    Tu navegador no soporta audio.
+                </audio>
+
+                <Button onClick={() => refetch()} disabled={isFetching} fullWidth
+                > {isFetching ? "Descargando..." : "Descargar archivo"} </Button>
+            </div>
+        </div>
+    )
+
+}
+
+function StatItem({ color, label, value, icon, }: { color: string, label: string, value: string | number, icon?: string }) {
+    const colors: Record<string, string> = {
+        red: "bg-red-100 border-red-300 text-red-700",
+        orange: "bg-orange-100 border-orange-300 text-orange-700",
+        blue: "bg-blue-100 border-blue-300 text-blue-700",
+        yellow: "bg-yellow-100 border-yellow-300 text-yellow-700",
     }
 
     return (
-        <>
-            <Grid>
-                <Grid.Col span={6}>
-                    <Flex justify={'center'} align={'center'} gap={20}>
-                        <Image src="/pokeball.svg" alt="Pokeball" h={60} w={60} />
-                        <Text size="4rem" fw={700}>{nombre}</Text>
-                    </Flex>
-
-                    <Flex justify={'center'}>
-                        <Text size="2rem" fw={500}> #{String(id).padStart(3, "0")}</Text>
-                    </Flex>
-                    <Space h={'xl'} />
-                    <Flex justify={'center'}>
-                        <Image h={450} w="auto" src={imagen} />
-                    </Flex>
-                    <Space h={'xs'} />
-                    <Flex justify={'center'}>
-                        <PokemonTypes types={tipoPokemon.map(tipo => tipo.nombre)} />
-                    </Flex>
-                </Grid.Col>
-                <Grid.Col span={6}>
-
-                    <Group justify="space-between">
-                        <ButtonCustom label="Descargar" color="primary" isLoading={isFetching} onClick={() => refetch()} />
-                    </Group>
-
-                    <Space h={'md'} />
-
-                    <Stack>
-                        {Object.entries(stats).map(([key, value]) => (
-                            <div key={key}>
-                                <Text size="sm" fw={500} mb={4}>
-                                    {formatearNombre(key)}: {value}
-                                </Text>
-                                <Progress value={(value / MAX_STAT_VALUE) * 100} />
-                            </div>
-                        ))}
-                    </Stack>
-
-                    <Space h={30} />
-
-                    <Flex justify={'center'}>
-                        <Text fs={'italic'} size="xl">{descripcion}</Text>
-                    </Flex>
-                </Grid.Col>
-
-            </Grid>
-
-        </>
+        <div className={`flex justify-between items-center w-full px-4 py-2 border rounded-xl shadow-sm font-medium ${colors[color]}`}>
+            <span className="flex items-center gap-2 text-lg"> {icon} {label} </span>
+            <span className="font-bold">{value}</span>
+        </div>
     )
 }

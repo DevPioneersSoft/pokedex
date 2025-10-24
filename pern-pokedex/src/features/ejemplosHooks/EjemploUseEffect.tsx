@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from 'react';
 
 interface PokemonAPI {
     pokemon: {
@@ -7,48 +7,43 @@ interface PokemonAPI {
 }
 
 export default function EjemploUseEffect({ tipo }: { tipo: string }) {
+    // const [numeroPokebolas, setNumeroPokebolas] = useState(0)
 
-    /*const [numeroPokebolas, setNumeroPokebolas] = useState(0)
-    const incrementar = () => {
-        setNumeroPokebolas(numeroPokebolas + 1)
-    }
+    // const incrementar = () => {
+    //     setNumeroPokebolas(numeroPokebolas + 1)
+    // }
 
-    useEffect(() => {
-        console.log(numeroPokebolas)
-    }, [numeroPokebolas]);*/
+    // useEffect(() => {
+    //     console.log(numeroPokebolas)
+    // }, [numeroPokebolas])
 
     const [pokemones, setPokemones] = useState<PokemonAPI[]>([])
-    const [cargando, setCargando] = useState(true)
+    const [cargando, setCargando] = useState(false)
 
     const buscarPokemonesPorTipo = async () => {
         setCargando(true)
-        setTimeout(async () => {
-            try {
-                const reponse = await fetch(`https://pokeapi.co/api/v2/type/${tipo}`)
-                const data = await reponse.json()
-                setPokemones(data.pokemon ?? [])
-            } catch (error) {
-                console.error("Error buscando pokemon", error)
-            } finally {
-                setCargando(false)
-            }
-        }, 1000);
+        try {
+            const response = await fetch(`https://pokeapi.co/api/v2/type/${tipo}`)
+            const data = await response.json()
+            setPokemones(data.pokemon ?? [])
+        } catch (error) {
+            console.error("Error buscando pokemon", error)
+        } finally {
+            setCargando(false)
+        }
     }
 
     useEffect(() => {
         buscarPokemonesPorTipo()
-    }, [tipo]);
+    }, [tipo])
 
-
-    if (cargando) return <div>Buscando pokemon de tipo {tipo}...</div>
+    if (cargando) return <div> Buscando pokemones de tipo {tipo}...</div>
 
     return (
         <div>
-            <h2>Pokemon de tipo {tipo}</h2>
+            <h2>Pokemon de tipo</h2>
             {
-                pokemones.map((pokemon) => (<div className="px-3" key={pokemon.pokemon.name}>
-                    {pokemon.pokemon.name}
-                </div>))
+                pokemones.map(pokemon => (<div key={pokemon.pokemon.name}>{pokemon.pokemon.name}</div>))
             }
         </div>
     )

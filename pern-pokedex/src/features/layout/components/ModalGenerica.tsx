@@ -3,11 +3,11 @@ import { Modal, type ModalProps } from "@mantine/core";
 import type { ReactNode } from "react";
 
 export interface ModalGenericaProps extends ModalProps {
-    children?: ReactNode;
-    footerLeftContent?: ReactNode;
-    footerCenterContent?: ReactNode;
-    footerRightContent?: ReactNode;
-};
+    children?: ReactNode
+    footerLeftContent?: ReactNode
+    footerCenterContent?: ReactNode
+    footerRightContent?: ReactNode
+}
 
 export default function ModalGenerica({
     withCloseButton = true,
@@ -71,5 +71,5 @@ export default function ModalGenerica({
                 </div>
             </Modal>
         </div>
-    );
+    )
 }

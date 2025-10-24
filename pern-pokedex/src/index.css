@@ -1,7 +1,6 @@
 @import "tailwindcss";
 
 @theme {
-
   --color-primary-50: #fdeceb;
   --color-primary-100: #f9c6c2;
   --color-primary-200: #f49996;
@@ -46,7 +45,6 @@
   --color-info-800: #0c3347;
   --color-info-900: #061924;
 
-
   /* Danger - Negro/rojo Team Rocket */
   --color-danger-100: #fce5e5;
   --color-danger-200: #f8baba;
@@ -57,6 +55,4 @@
   --color-danger-700: #761e1e;
   --color-danger-800: #4d1313;
   --color-danger-900: #260909;
-
-
 }

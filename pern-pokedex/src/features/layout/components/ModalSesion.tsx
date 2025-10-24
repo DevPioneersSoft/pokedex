@@ -1,11 +1,12 @@
-
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Input, Modal } from '@mantine/core'
+import { Button, Divider, Input, Modal, Text } from '@mantine/core'
 import { useState } from 'react'
+import { flushSync } from 'react-dom'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
-import { useCrearUsuario, useIniciarSesion } from '../../pokemonDetalles/hooks/useRegistro'
-import ButtonCustom from './ButtonCustom'
+import { useLogin } from '../../cuadricula/hooks/useLogin'
+import { useRegistro } from '../../cuadricula/hooks/useRegistro'
+import { useUserStore } from '../store/userStore'
 
 const LOGIN = z.object({
     username: z.string().min(5, 'Usuario no valido'),
@@ -17,8 +18,11 @@ type formValues = z.infer<typeof LOGIN>
 export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, onClose: () => void }) {
     const [sesion, setSesion] = useState(false)
 
-    const { mutate } = useIniciarSesion();
-    const { mutate: crearUsuario } = useCrearUsuario();
+    const { mutate: loginUsuario } = useLogin()
+    const { mutate: crearUsuario } = useRegistro()
+
+    const setUser = useUserStore(state => state.setUser)
+    const logout = useUserStore(state => state.logout)
 
     const form = useForm<formValues>({
         resolver: zodResolver(LOGIN),
@@ -32,20 +36,47 @@ export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, 
         if (sesion) {
             crearUsuario(data)
         } else {
-            mutate(data)
+            loginUsuario(data, {
+                onSuccess: data => {
+                    flushSync(() => logout())
+                    setUser(data)
+                    form.reset()
+                }
+            })
         }
     }
     return (
-        <Modal onClose={onClose} opened={onOpened}
-            title={sesion ? 'Registrarse' : 'Iniciar Sesión'}
+        <Modal
+            opened={onOpened} onClose={onClose} centered radius="lg"
+            title={<Text size="xl" fw={700} ta="center"> {sesion ? "Registrarse" : "Iniciar Sesión"} </Text>}
+            overlayProps={{
+                backgroundOpacity: 0.55,
+                blur: 3,
+            }}
         >
-            <form onSubmit={form.handleSubmit(onSubmit)}>
-                <Input placeholder="usuario" {...form.register('username')} error={form.formState.errors.username?.message} />
-                <Input type="password" placeholder="contraseña" {...form.register('contrasena')} error={form.formState.errors.contrasena?.message} />
-                <ButtonCustom type='submit' color="primary" label="Iniciar sesión" />
-                <ButtonCustom type="button" color="secondary" onClick={() => setSesion((prev) => !prev)} label={sesion ? 'Iniciar Sesión' : 'Registrarse'} />
-            </form>
+            <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4 p-2">
+                <div>
+                    <Input.Wrapper label="Usuario" error={form.formState.errors.username?.message} >
+                        <Input placeholder="Ingresa tu usuario" {...form.register("username")} radius="md" />
+                    </Input.Wrapper>
+                </div>
 
+                <div>
+                    <Input.Wrapper label="Contraseña" error={form.formState.errors.contrasena?.message}>
+                        <Input type="password" placeholder="••••••••" {...form.register("contrasena")} radius="md" />
+                    </Input.Wrapper>
+                </div>
+
+                <Button type="submit" radius="md" fullWidth className="mt-2 font-semibold">
+                    {sesion ? "Registrarse" : "Iniciar Sesión"}
+                </Button>
+
+                <Divider my="sm" label="o" labelPosition="center" />
+
+                <Text size="sm" c="blue" ta="center" className="cursor-pointer hover:underline" onClick={() => setSesion((prev) => !prev)} >
+                    {sesion ? "¿Ya tienes cuenta? Inicia sesión" : "¿No tienes cuenta? Regístrate"}
+                </Text>
+            </form>
         </Modal>
     )
 }

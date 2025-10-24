@@ -1,65 +1,63 @@
-import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
-import type { Pokemon } from "../interfaces/Pokemon.interface";
+import { Alert, Button, Center, Grid, Input, Loader } from "@mantine/core";
+import { useBuscarPokemones } from "../hooks/useBuscarPokemones";
+import { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
-  callback?: (pokemon: Pokemon) => void
+    callback?: (pokemon: Pokemon) => void
+    lista: number[]
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
-  const {
-    pokemones,
-    isLoading,
-    isFetching,
-    prevPage,
-    nextPage,
-    hasPrevPage,
-    hasNextPage,
-    page,
-    totalPages,
-    searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
-  if (isLoading) return <div>Cargando...</div>;
-  if (isFetching) return <div>Refrescando...</div>;
-  return (
-    <>
-      <input
-        type="text"
-        onKeyUp={(e) => searchPokemons(e.currentTarget.value)}
-        className="bg-secondary-200 rounded-lg p-2"
-        placeholder="Buscar:"
-      />
-      <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
+export default function Cuadricula({ callback, lista }: CuadriculaProps) {
 
-        {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon
-            key={pokemon.id}
-            pokemon={pokemon}
-            callback={callback}
-          />
-        ))}
-      </div>
-      {pokemones && (
-        <div className="flex justify-center items-center mt-4 gap-2">
-          <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
-            onClick={() => prevPage()}
-            disabled={!hasPrevPage}
-          >
-            Anterior
-          </button>
-          <span>
-            Página {page} de {totalPages}
-          </span>
-          <button
-            className="px-3 py-1 rounded bg-primary-200 disabled:opacity-50"
-            onClick={() => nextPage()}
-            disabled={!hasNextPage}
-          >
-            Siguiente
-          </button>
-        </div>
-      )}
-    </>
-  );
+    const {
+        pokemones,
+        isLoading,
+        refetch,
+        isFetching,
+        nextPage,
+        prevPage,
+        searchPokemones,
+        page,
+        totalPages
+    } = useBuscarPokemones({ initialPageSize: 18 })
+
+    return (
+        <>
+            <Grid>
+                <Grid.Col span={2}>
+                    <Button fullWidth color="yellow" onClick={() => refetch()}>Refrescar lista</Button>
+                </Grid.Col>
+                <Grid.Col span={4}>
+                    <Input placeholder="Búsqueda por ID/Nombre" onKeyUp={(e) => searchPokemones(e.currentTarget.value)} />
+                </Grid.Col>
+                <Grid.Col span={2}>
+                    <span className="text-white font-bold">Página {page} de {totalPages}</span>
+                </Grid.Col>
+                <Grid.Col span={1} offset={2}>
+                    <Button fullWidth color="yellow" onClick={() => prevPage()}>{`<`}</Button>
+                </Grid.Col>
+                <Grid.Col span={1}>
+                    <Button fullWidth color="yellow" onClick={() => nextPage()}>{`>`}</Button>
+                </Grid.Col>
+            </Grid>
+            <Grid className="mt-4">
+                {(isLoading || isFetching) ?
+                    (
+                        <Grid.Col span={6} offset={3}>
+                            <Alert variant="light" color="yellow" radius="md" title="Cargando Pokemones">
+                                <Center>
+                                    <Loader size={"xl"} type="dots" color="yellow" />
+                                </Center>
+                            </Alert>
+                        </Grid.Col>
+                    ) : (
+                        pokemones?.map(pokemon => <Grid.Col span={2} key={pokemon.id}
+                            children={<CardPokemon pokemon={pokemon} callback={callback} selected={lista.includes(pokemon.id)} />}
+                        />)
+                    )
+                }
+            </Grid>
+        </>
+    )
 }

@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import api from "../../../shered/utils/api";
+import api from "../../../shered/api";
 
 export function usePokemonFile(id: number) {
     return useQuery({
@@ -7,20 +7,20 @@ export function usePokemonFile(id: number) {
         queryFn: async () => {
             const response = await api.get(`/pokemon/${id}/ficha`, {
                 responseType: "blob",
-            });
+            })
 
-            const blob = response.data;
-            const urlBlob = window.URL.createObjectURL(blob);
+            const blob = response.data
+            const urlBlob = window.URL.createObjectURL(blob)
 
-            const a = document.createElement("a");
-            a.href = urlBlob;
-            a.download = `pokemon-${id}.pdf`;
-            document.body.appendChild(a);
-            a.click();
+            const a = document.createElement("a")
+            a.href = urlBlob
+            a.download = `pokemon-${id}.pdf`
+            document.body.appendChild(a)
+            a.click()
 
-            a.remove();
-            window.URL.revokeObjectURL(urlBlob);
+            a.remove()
+            window.URL.revokeObjectURL(urlBlob)
         },
         enabled: false,
-    });
+    })
 }

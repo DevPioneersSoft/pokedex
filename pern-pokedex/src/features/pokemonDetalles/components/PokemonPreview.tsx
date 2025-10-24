@@ -1,13 +1,17 @@
-import ButtonCustom from "../../layout/components/ButtonCustom";
-import type { Pokemon } from "../../cuadricula/interfaces/Pokemon.interface";
+import { Button, useModalsStack } from "@mantine/core";
+import { Pokemon } from "../../cuadricula/interfaces/Pokemon.interface";
 import ModalGenerica from "../../layout/components/ModalGenerica";
-import { useModalsStack } from "@mantine/core";
 import { usePokemonDetalle } from "../hooks/usePokemonDetalles";
 import PokemonDetalles from "./PokemonDetalles";
 
+interface PokemonPreviewProps {
+    pokemon: Pokemon,
+    favorito: boolean,
+    handleFav: () => void
+}
 
-export default function PokemonPreview(pokemon: Pokemon) {
-    const { id, imagen, nombre } = pokemon;
+export default function PokemonPreview({ pokemon, favorito, handleFav }: PokemonPreviewProps) {
+    const { id, imagen, nombre } = pokemon
 
     const { data: pokemonDetalles, isLoading } = usePokemonDetalle(id)
 
@@ -15,58 +19,74 @@ export default function PokemonPreview(pokemon: Pokemon) {
 
     return (
         <>
-            <div className="overflow-hidden">
-                <div
-                    className="relative w-screen h-screen rounded-2xl overflow-hidden bg-secondary-300/80 text-white shadow-xl border border-white/10"
-                    style={{
-                        transform:
-                            "perspective(1000px) rotateY(-20deg) translateX(-50rem) translateY(-10rem)",
-                        transformStyle: "preserve-3d",
-                    }}
-                >
-                    <div className="absolute  opacity-20" />
-                    <img
-                        src={imagen}
-                        alt={`${nombre} background`}
-                        className="absolute -inset-x-70 -inset-y-40 z-0 w-[140%] h-[140%] object-contain opacity-10 scale-150"
-                    />
-                </div>
-                <div className="absolute inset-60 z-10 flex flex-col items-center translate-x-100 -translate-y-20">
-                    <h2 className="text-6xl font-bold  uppercase">
-                        {nombre}
-                    </h2>
-                    <img src={imagen} alt={nombre} className="h-100 drop-shadow-lg" />
-                    <div className="text-5xl font-bold">
-                        #{String(id).padStart(3, "0")}
+            <div className="relative w-full h-full flex flex-col items-center justify-center p-6">
+                <div className="
+                    relative w-full max-w-md aspect-[4/5] 
+                    bg-secondary-300/80 
+                    text-white rounded-2xl overflow-hidden 
+                    shadow-xl border border-white/10 
+                ">
+                    <div className="absolute inset-0 z-0">
+                        <img src={imagen} alt={`${nombre} background`} className="w-full h-full object-contain opacity-10 scale-125 grayscale" />
                     </div>
-                    <div className="w-full max-w-4xl rounded-lg flex justify-center p-4 text-sm ">
-                        <ButtonCustom
-                            label="Ver detalles"
-                            color="primary"
-                            onClick={() => stack.open("detallePokemon")}
-                            disabled={isLoading}
+
+                    <div className="relative z-10 flex flex-col items-center justify-between h-full py-6 text-center">
+                        <h2 className="text-3xl font-bold uppercase drop-shadow-lg">{nombre}</h2>
+
+                        <img
+                            src={imagen}
+                            alt={nombre}
+                            className="h-48 object-contain drop-shadow-lg"
                         />
+
+                        <div className="text-2xl font-bold opacity-90 mt-2">
+                            #{String(id).padStart(3, "0")}
+                        </div>
+
+                        <div className="flex items-center justify-center gap-3 mt-4">
+                            <Button
+                                color="yellow"
+                                onClick={handleFav}
+                                className="flex items-center justify-center transition-all duration-300"
+                            >
+                                <svg
+                                    xmlns="http://www.w3.org/2000/svg"
+                                    fill={favorito ? "currentColor" : "none"}
+                                    viewBox="0 0 24 24"
+                                    strokeWidth={1.8}
+                                    stroke="currentColor"
+                                    className="w-6 h-6 transition-transform duration-300"
+                                >
+                                    <path
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        d="M11.48 3.499a.562.562 0 011.04 0l2.125 
+                                        5.111a.562.562 0 00.475.345l5.518.402c.484.035.682.646.312.965l-4.202 
+                                        3.63a.562.562 0 00-.182.557l1.29 5.384a.562.562 
+                                        0 01-.84.61L12 18.347l-4.016 2.656a.562.562 
+                                        0 01-.84-.61l1.29-5.384a.562.562 0 00-.182-.557l-4.202-3.63a.562.562 
+                                        0 01.312-.965l5.518-.402a.562.562 
+                                        0 00.475-.345L11.48 3.5z"
+                                    />
+                                </svg>
+                            </Button>
+
+                            <Button disabled={isLoading} color="lime" onClick={() => stack.open("detallePokemon")}>Ver detalles</Button>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
             <ModalGenerica
                 title="Detalles"
-                size={"70%"}
-                footerLeftContent={
-                    <ButtonCustom
-                        label="Cerrar"
-                        color="secondary"
-                        onClick={() => stack.close("detallePokemon")}
-                    />
-                }
+                size={"xl"}
+                footerLeftContent={<Button color="gray" onClick={() => stack.close("detallePokemon")}>Cerrar</Button>}
                 {...stack.register("detallePokemon")}
             >
-                {
-                    pokemonDetalles && <PokemonDetalles pokemon={pokemonDetalles} />
-                }
+                {pokemonDetalles && <PokemonDetalles pokemon={pokemonDetalles} />}
             </ModalGenerica>
 
         </>
-    );
+    )
 }

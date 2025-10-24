@@ -1,8 +1,7 @@
-import type { PokemonSimple } from "../../cuadricula/components/pokemon.dummy";
-
+import { PokemonSimple } from "../../cuadricula/components/pokemon.dummy";
 
 interface EstadoEquipo {
-    equipo: PokemonReducer[],
+    equipo: PokemonReducer[]
     pokemonActivo: PokemonReducer['id'] | null
     enBatalla: boolean
 }
@@ -17,25 +16,22 @@ export const estadoInicial: EstadoEquipo = {
     enBatalla: false
 }
 
-
-type ActionTypes = | { type: "AGREGAR_POKEMON", payload: PokemonReducer }
+type ActionTypes = { type: "AGREGAR_POKEMON", payload: PokemonReducer }
     | { type: "REMOVER_POKEMON", payload: PokemonReducer['id'] }
     | { type: "SELECCIONAR_POKEMON_ACTIVO", payload: PokemonReducer['id'] }
     | { type: "INICIAR_BATALLA" }
     | { type: "TERMINAR_BATALLA" }
 
-
 export function equipoReducer(state: EstadoEquipo, action: ActionTypes) {
-
     switch (action.type) {
         case "AGREGAR_POKEMON":
             if (state.equipo.length >= 6) {
-                alert("El equipo ya esta lleno")
+                alert("El equipo ya está lleno")
                 return state
             }
             if (state.equipo.some((p) => p.id === action.payload.id)) {
-                alert("Este Pokémon ya está en tu equipo.");
-                return state;
+                alert("Este Pokémon ya está en tu equipo.")
+                return state
             }
             return {
                 ...state,
@@ -54,7 +50,7 @@ export function equipoReducer(state: EstadoEquipo, action: ActionTypes) {
             }
         case "INICIAR_BATALLA":
             if (!state.pokemonActivo) {
-                alert("Selecciona un pokemon activo para empezar")
+                alert("Seleeciona un pokemon activo para empezar")
                 return state
             }
             return {
@@ -75,7 +71,6 @@ export function equipoReducer(state: EstadoEquipo, action: ActionTypes) {
                     return pokemon
                 })
             }
-
         default: return state
     }
 

@@ -1,11 +1,11 @@
 import { Loader } from "@mantine/core"
-import type { Color } from "../types/Color"
+import { Color } from "../types/Color"
 
 interface ButtonCustomProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-    id?: string,
+    id?: string
     type?: "submit" | "reset" | "button"
-    label?: string,
-    color?: Color,
+    label?: string
+    color?: Color
     isLoading?: boolean
 }
 
@@ -40,8 +40,7 @@ const colors = {
         hover: "hover:from-default-400 hover:to-default-600",
         ringFocus: "focus:ring-default-400 "
     },
-};
-
+}
 
 export default function ButtonCustom({
     label,
@@ -51,21 +50,19 @@ export default function ButtonCustom({
     disabled,
     ...props
 }: ButtonCustomProps) {
-
     const variante = colors[color]
-
     return (
         <button
             className={`
-            relative inline-flex items-center justify-center px-6 py-2 
-            rounded-lg font-bold uppercase text-white 
-            bg-gradient-to-b ${variante.bg} border-4 
-            ${variante.border} shadow-lg transition-all duration-200 
-            ${variante.hover} active:translate-y-0.
-            5 active:shadow-md focus:outline-none focus:ring-2 ${variante.ringFocus}
-            focus:ring-offset-2
-            disabled:cursor-not-allowed
-            ${className ?? ""} 
+                relative inline-flex items-center justify-center px-6 py-2 
+                rounded-lg font-bold uppercase text-white 
+                bg-gradient-to-b ${variante.bg} border-4 
+                ${variante.border} shadow-lg transition-all duration-200 
+                ${variante.hover} active:translate-y-0.5 
+                active:shadow-md focus:outline-none focus:ring-2 ${variante.ringFocus}
+                focus:ring-offset-2
+                disabled:cursor-not-allowed
+                ${className ?? ''} 
             `}
             disabled={disabled || isLoading}
             {...props}
