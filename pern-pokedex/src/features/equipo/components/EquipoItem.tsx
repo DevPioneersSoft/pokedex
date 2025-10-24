@@ -1,4 +1,3 @@
-import React from 'react'
 import type { Pokemon } from '../../cuadricula/interfaces/Pokemon.interface'
 import { useEquipoStore } from '../store/EquipoStore';
 
