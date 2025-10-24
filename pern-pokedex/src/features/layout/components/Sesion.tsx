@@ -1,10 +1,11 @@
 import { Avatar, Menu } from "@mantine/core";
 import { useState } from "react";
 import ModalSesion from "./ModalSesion";
+import { useUserStore } from "../../store/userStore";
 
 export default function Sesion() {
     const [modal, setModal] = useState(false)
-
+    const usuario = useUserStore((state) => state.usuario);
     return (
         <>
             <div className="mr-10">
@@ -12,7 +13,7 @@ export default function Sesion() {
                     <Menu.Target>
                         <Avatar
                             size={50}
-                            name="Lucero Esquivel"
+                            name={usuario?.usuario.username}
                             color="initials"
                             className="cursor-pointer"
                             allowedInitialsColors={["var(--color-secondary-600)"]}

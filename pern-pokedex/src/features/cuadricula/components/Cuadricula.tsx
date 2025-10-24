@@ -1,4 +1,4 @@
-import { Button, Container, Group, SimpleGrid, TextInput } from "@mantine/core";
+import { Button, Center, Container, Group, Loader, SimpleGrid, Stack, TextInput } from "@mantine/core";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
@@ -12,7 +12,7 @@ interface CuadriculaProps {
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
   
-  const {favoritos} = useFavoritos();
+  const {favoritos, toggleFavoritos} = useFavoritos();
   
   const {
     pokemones,
@@ -28,8 +28,27 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     searchPokemons,
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 , favoritos});
   const [searchTerm, setSearchTerm] = useState('');
-  if (isLoading) return <div>Cargando...</div>;
-  if (isFetching) return <div>Refrescando...</div>;
+  
+  if(isLoading) {
+    return <Center style={{ minHeight: '80vh' }}>
+      <Stack align="center" gap="sm">
+        <Loader size="xl" />
+        <p style={{ margin: 0, fontSize: '1.2rem', color: '#888' }}>
+          Cargando...
+        </p>
+        </Stack>
+      </Center>
+  }
+  if(isFetching) {
+    return <Center style={{ minHeight: '80vh' }}>
+      <Stack align="center" gap="sm">
+        <Loader size="xl" />
+        <p style={{ margin: 0, fontSize: '1.2rem', color: '#888' }}>
+          Cargando...
+        </p>
+        </Stack>
+      </Center>
+  }
   return (
     <>
       
@@ -59,6 +78,8 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
             key={index}
             pokemon = {pokemon}
             callback={callback}
+            esFavorito={favoritos.includes(pokemon.id)}
+            toggleFavoritos={toggleFavoritos}
           />
         ))}
       </SimpleGrid>

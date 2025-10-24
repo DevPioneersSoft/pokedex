@@ -18,20 +18,22 @@ const useFavoritos = () => {
     const [favoritos, setFavoritos] = useState<number[]>([]);
 
     const agregar = useMutation({
-        mutationFn : async () => {
-            const response = await api.post('favorito', favoritos.map(a => ({pokemonId : a})));
+        mutationFn : async (lFavoritos: number[]) => {
+            const response = await api.post('favorito',  lFavoritos.map(id => ({pokemonId: id})));
             return response.data;
         }
-    })
+    });
 
     const toggleFavoritos = (pokemon : Pokemon) => {
-        setFavoritos((prev) => {
-            const esFavorito = prev.includes(pokemon.id);
-            if(esFavorito)
-                return prev.filter((p) => p !== pokemon.id);
-            return [...prev, pokemon.id];
-        });
-
+        let lFavoritos: number[];
+        if (favoritos.includes(pokemon.id)) {
+            lFavoritos = favoritos.filter((id) => id !== pokemon.id);
+            setFavoritos(lFavoritos);
+        } else {
+            lFavoritos = [...favoritos, pokemon.id];
+            setFavoritos(lFavoritos);
+        }
+        agregar.mutate(lFavoritos);
     }
 
     return {data : query.data,

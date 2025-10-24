@@ -6,6 +6,8 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 import { useCrearUsuario, useIniciarSesion } from '../../pokemonDetalles/hooks/useRegistro'
 import ButtonCustom from './ButtonCustom'
+import { flushSync } from 'react-dom'
+import { useUserStore } from '../../store/userStore'
 
 const LOGIN = z.object({
     username: z.string().min(5, 'Usuario no valido'),
@@ -15,8 +17,9 @@ const LOGIN = z.object({
 type formValues = z.infer<typeof LOGIN>
 
 export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, onClose: () => void }) {
-    const [sesion, setSesion] = useState(false)
-
+    const [sesion, setSesion] = useState(false);
+    const setUser = useUserStore((state) => state.setUser);
+    const logout = useUserStore((state) => state.logout);
     const { mutate } = useIniciarSesion();
     const { mutate: crearUsuario } = useCrearUsuario();
 
@@ -32,7 +35,13 @@ export default function ModalSesion({ onOpened, onClose }: { onOpened: boolean, 
         if (sesion) {
             crearUsuario(data)
         } else {
-            mutate(data)
+            mutate(data,{
+                onSuccess : (data) => {
+                    flushSync(() => logout());
+                    setUser(data);
+                    form.reset();
+                },
+            })
         }
     }
     return (

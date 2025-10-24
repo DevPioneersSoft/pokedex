@@ -1,13 +1,17 @@
+import { ActionIcon, Tooltip } from "@mantine/core";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
+import { IconStar, IconStarFilled } from '@tabler/icons-react';
 
 interface CardPokemonProps {
   pokemon: Pokemon,
   callback?: (pokemon: Pokemon) => void
+  esFavorito?: boolean;
+  toggleFavoritos?: (pokemon: Pokemon) => void;
 }
 
-export default function CardPokemon({ pokemon, callback }: CardPokemonProps) {
+export default function CardPokemon({ pokemon, esFavorito = false, toggleFavoritos, callback }: CardPokemonProps) {
 
-  const { nombre, imagen, id } = pokemon
+  const { nombre, imagen, id } = pokemon;
 
   return (
      <div
@@ -17,6 +21,20 @@ export default function CardPokemon({ pokemon, callback }: CardPokemonProps) {
         if (callback) callback(pokemon)
       }}
     >
+    <Tooltip
+      label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+      position="top"
+      withArrow
+    >
+      <ActionIcon
+          variant="light"
+          color={esFavorito ? 'yellow' : 'gray'}
+          onClick={()=>toggleFavoritos?.(pokemon)}
+          size="sm"
+        >
+          {esFavorito ? <IconStarFilled size={15}/> : <IconStar size={15} />}
+        </ActionIcon>
+    </Tooltip>  
       <h2 style={{
             textAlign: "center",
             color: "white",
