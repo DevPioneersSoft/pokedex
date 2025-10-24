@@ -25,6 +25,7 @@ async function fetchPokemones({ queryKey }: { queryKey: readonly unknown[] }) {
     skip: String(params.skip),
     take: String(params.take),
     ...(where ? { where: JSON.stringify(where) } : {}),
+    
   });
   const response = await fetch(url);
   const data = await response.json();
@@ -39,11 +40,12 @@ export function useBuscarPokemones() {
   const [filtro, setFiltro] = useState('');
   const [pagina, setPagina] = useState(1);
   const [recargando, setRecargando] = useState(false);
-  const LIMITE = 12;
+  const LIMITE = 15;
 
   const query = useQuery({
     queryKey: ['pokemones', filtro, pagina, LIMITE],
     queryFn: fetchPokemones,
+    staleTime: 1000 * 60 * 5, // 5 minutos para refrescar los pokemones
   });
 
   const handleBuscar = (texto: string) => {

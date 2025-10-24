@@ -21,7 +21,7 @@ const useFavoritos = () => {
 
   const agregar = useMutation({
     mutationFn: async (favoritosAEnviar: number[]) => {
-      // enviar la lista completa de favoritos
+      
       const response = await fetch(`${apiUrl}/favorito`, {
         method: 'POST',
         credentials: 'include',
@@ -31,7 +31,13 @@ const useFavoritos = () => {
         body: JSON.stringify(favoritosAEnviar.map((a) => ({ pokemonId: a }))),
       });
       if (!response.ok) throw new Error('No se pudo agregar favorito');
-      return response.json();
+      const text = await response.text();
+      if (!text) return null;
+      try {
+        return JSON.parse(text);
+      } catch {
+        return null;
+      }
     },
   });
 
