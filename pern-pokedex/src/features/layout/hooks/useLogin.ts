@@ -3,9 +3,17 @@ import api from "../../../shered/utils/api";
 
 const useLogin = () => { 
     return useMutation({
-        mutationFn: async (data: { username: string; contrasena: string }) => {
-            const response = await api.post('autenticacion', data);
-            return response.data;
+        mutationFn: async (data: { 
+            username: string; 
+            contrasena: string 
+        }) => {
+            try {
+                const response = await api.post('autenticacion', data);
+                return response.data;                
+            } catch (error) {
+                console.error(error)
+            }
+
         }
     })   
 }

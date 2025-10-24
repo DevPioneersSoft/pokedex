@@ -6,12 +6,10 @@ import { z } from "zod";
 
 import { flushSync } from "react-dom";
 
-import {
-  useCrearUsuario,
-  useIniciarSesion,
-} from "../../pokemonDetalles/hooks/useRegistro";
 import ButtonCustom from "./ButtonCustom";
 import { useUserStore } from "../store/userStore";
+import useLogin from "../hooks/useLogin";
+import useRegister from "../hooks/useRegister";
 
 const LOGIN = z.object({
   username: z.string().min(5, "Usuario no valido"),
@@ -31,8 +29,8 @@ export default function ModalSesion({
   const setUser = useUserStore((state) => state.setUser);
   const logout = useUserStore((state) => state.logout);
 
-  const { mutate } = useIniciarSesion();
-  const { mutate: crearUsuario } = useCrearUsuario();
+  const { mutate } = useLogin();
+  const { mutate: crearUsuario } = useRegister();
 
   const form = useForm<formValues>({
     resolver: zodResolver(LOGIN),
