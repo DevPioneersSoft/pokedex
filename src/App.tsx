@@ -4,6 +4,7 @@ import RefrescarPokemonesButton from './features/layout/components/BotonRefresca
 import Paginacion from './features/layout/components/Paginacion';
 import BuscadorPokemon from './features/layout/components/BuscadorPokemon';
 import { useBuscarPokemones } from './features/ejemploHooks/hooks/useBuscarPokemones';
+import Equipo from './features/equipo/components/Equipo';
 
 function App() {
   const {
@@ -31,12 +32,14 @@ function App() {
         error={error}
         pokemonsList={pokemonsList}
       />
+      
       <Paginacion
         pagina={pagina}
         totalPaginas={totalPaginas}
         handleAnterior={handleAnterior}
         handleSiguiente={handleSiguiente}
       />
+      <Equipo />
     </div>
   );
 }

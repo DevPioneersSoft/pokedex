@@ -27,13 +27,13 @@ export default function Header() {
                                     Mis favoritos
                                 </Button>
                             </div>
-                            <div>
+                            {/* <div>
                                 <Button color="yellow"
                                     onClick={() => navigate('/equipo')}
                                 >
                                     Mi equipo
                                 </Button>
-                            </div>
+                            </div> */}
                             <div className="flex space-x-4">
                             </div>
                         </div>

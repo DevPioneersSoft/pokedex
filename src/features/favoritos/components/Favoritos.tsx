@@ -1,9 +1,11 @@
 
+// import Header from '../../layout/components/Header';
+
 import { useTodosLosPokemones } from '../../ejemploHooks/hooks/useTodosLosPokemones';
 import useFavoritos from '../../ejemploHooks/hooks/useFavoritos';
-import Header from '../../layout/components/Header';
 import CardPokemon from '../../layout/components/CardPokemon';
 import { useEquipo } from '../../ejemploHooks/hooks/useEquipo';
+import Header from '../../layout/components/Header';
 
 export default function Favoritos() {
     const { data: todosLosPokemones = [] } = useTodosLosPokemones();
