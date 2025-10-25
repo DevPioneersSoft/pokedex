@@ -4,10 +4,9 @@ import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 import { useState } from "react";
 import useFavoritos from "../hooks/useFavoritos";
-import { usePokemonesFavoritos } from "../../ejemplosHooks/hooks";
 
 interface CuadriculaProps {
-  callback?: (pokemon: Pokemon) => void
+  callback?: (pokemon: Pokemon) => void,
 }
 
 export default function Cuadricula({ callback }: CuadriculaProps) {
@@ -80,6 +79,7 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
             callback={callback}
             esFavorito={favoritos.includes(pokemon.id)}
             toggleFavoritos={toggleFavoritos}
+            mostrarBtnFavoritos={true}
           />
         ))}
       </SimpleGrid>

@@ -1,0 +1,33 @@
+import { createBrowserRouter } from "react-router-dom";
+import App from "../App";
+import Pokedex from "../features/cuadricula/Pokedex";
+import Equipo from "../features/equipo/components/Equipo";
+import { EjemploUseReducer } from "../features/ejemplosHooks/EjemploUseReducer";
+import Error from "../errors/Error";
+import RutaProtegida from "../features/layout/components/RutaProtegida";
+
+export const router = createBrowserRouter([
+    {
+        path : '/',
+        Component : App,
+        errorElement : <Error/>,
+        children : [
+            {
+                path : '/',
+                Component : Pokedex
+            },
+            {
+                path:'/equipo',
+                element : (
+                    <RutaProtegida>
+                        <Equipo></Equipo>
+                    </RutaProtegida>
+                )
+            },
+            {
+                path:'/batalla',
+                Component :  EjemploUseReducer
+            }
+        ]
+    }
+]);

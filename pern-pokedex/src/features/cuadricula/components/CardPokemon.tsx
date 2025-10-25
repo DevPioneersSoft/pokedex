@@ -7,9 +7,10 @@ interface CardPokemonProps {
   callback?: (pokemon: Pokemon) => void
   esFavorito?: boolean;
   toggleFavoritos?: (pokemon: Pokemon) => void;
+  mostrarBtnFavoritos?:boolean
 }
 
-export default function CardPokemon({ pokemon, esFavorito = false, toggleFavoritos, callback }: CardPokemonProps) {
+export default function CardPokemon({ pokemon, esFavorito = false, toggleFavoritos, mostrarBtnFavoritos, callback }: CardPokemonProps) {
 
   const { nombre, imagen, id } = pokemon;
 
@@ -21,20 +22,24 @@ export default function CardPokemon({ pokemon, esFavorito = false, toggleFavorit
         if (callback) callback(pokemon)
       }}
     >
-    <Tooltip
-      label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
-      position="top"
-      withArrow
-    >
-      <ActionIcon
-          variant="light"
-          color={esFavorito ? 'yellow' : 'gray'}
-          onClick={()=>toggleFavoritos?.(pokemon)}
-          size="sm"
-        >
-          {esFavorito ? <IconStarFilled size={15}/> : <IconStar size={15} />}
-        </ActionIcon>
-    </Tooltip>  
+    
+      {mostrarBtnFavoritos && (
+        <Tooltip
+              label={esFavorito ? 'Quitar de favoritos' : 'Agregar a favoritos'}
+              position="top"
+              withArrow
+            >
+            <ActionIcon
+              variant="light"
+              color={esFavorito ? 'yellow' : 'gray'}
+              onClick={()=>toggleFavoritos?.(pokemon)}
+              size="sm"
+            >
+              {esFavorito ? <IconStarFilled size={15}/> : <IconStar size={15} />}
+            </ActionIcon>
+        </Tooltip> 
+      )}
+       
       <h2 style={{
             textAlign: "center",
             color: "white",
