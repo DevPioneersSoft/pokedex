@@ -1,4 +1,6 @@
 import { create } from 'zustand'
+import api from '../../../features/utils';
+import { QueryClient } from '@tanstack/react-query';
 
 interface UserData {
     id: number;
@@ -25,7 +27,19 @@ export const useUserStore = create<UserStore>((set) => {
         }
         set({ usuario });
     },
-    logOut: () => set({ usuario: null }),
+        logOut: async () => {
+            try {
+                await api.post('/autenticacion/logout');
+            } catch (e) {
+                console.log('Error al hacer logout', e);
+            }
+            localStorage.removeItem('usuario');
+            set({ usuario: null });
+            try {
+                const queryClient = new QueryClient();
+                queryClient.removeQueries({ queryKey: ['equipo'] });
+            } catch (e) {}
+        },
   
   };
 });

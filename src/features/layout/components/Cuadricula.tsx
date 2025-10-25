@@ -23,13 +23,13 @@ const Cuadricula = ({ cargando, recargando, error, pokemonsList }: {
   };
 
   // ya no uso este pero por si las dudas se queda :p
-  const handleToggleEquipo = useCallback((pokemon: Pokemon) => {
-    if (estaEnEquipo(pokemon.id)) {
-      quitarPokemon(pokemon.id);
-    } else {
-      agregarPokemon(pokemon);
-    }
-  }, [agregarPokemon, quitarPokemon, estaEnEquipo]);
+  // const handleToggleEquipo = useCallback((pokemon: Pokemon) => {
+  //   if (estaEnEquipo(pokemon.id)) {
+  //     quitarPokemon(pokemon.id);
+  //   } else {
+  //     agregarPokemon(pokemon);
+  //   }
+  // }, [agregarPokemon, quitarPokemon, estaEnEquipo]);
 
   const cerrarModal = () => {
     setPokemonSeleccionado(null);

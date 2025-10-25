@@ -1,6 +1,3 @@
-
-// import Header from '../../layout/components/Header';
-
 import { useTodosLosPokemones } from '../../ejemploHooks/hooks/useTodosLosPokemones';
 import useFavoritos from '../../ejemploHooks/hooks/useFavoritos';
 import CardPokemon from '../../layout/components/CardPokemon';

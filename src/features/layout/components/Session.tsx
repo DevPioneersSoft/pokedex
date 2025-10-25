@@ -38,6 +38,7 @@ export default function Session() {
             });
           }
           setModalLoginAbierto(false);
+          window.location.reload();
         },
         onError: (error: any) => {
           console.error("Error al iniciar sesión", error);
@@ -46,8 +47,9 @@ export default function Session() {
     );
   };
 
-  const handleCerrarSesion = () => {
-    logOut();
+  const handleCerrarSesion = async () => {
+    await logOut();
+    window.location.reload();
   };
 
   // Obtener iniciales del usuario
