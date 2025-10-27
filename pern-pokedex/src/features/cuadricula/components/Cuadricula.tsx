@@ -1,3 +1,4 @@
+import { useUserStore } from "../../layout/store/userStore";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import useFavoritos from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
@@ -9,7 +10,10 @@ interface CuadriculaProps {
 }
 
 export default function Cuadricula({ callback, registrarFavortios = true }: CuadriculaProps) {
-  const { favoritos, agregar, toggleFav } = useFavoritos()
+
+  const usuario = useUserStore(state => state.usuario)
+
+  const { favoritos, agregar, toggleFav } = useFavoritos(usuario?.usuario.id)
 
   const {
     pokemones,

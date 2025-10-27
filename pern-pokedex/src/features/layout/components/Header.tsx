@@ -43,9 +43,8 @@ export default function Header() {
                             <div className="flex space-x-4">
 
                                 {
-                                    equipo.map(pokemon => (<div>
+                                    equipo.map(pokemon => (<div key={pokemon.id}>
                                         <img
-                                            key={pokemon.id}
                                             src={pokemon.imagen}
                                             className="max-h-7 2xl:max-h-14"
                                         />
