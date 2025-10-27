@@ -1,9 +1,20 @@
 import Sesion from "./Sesion";
 import ButtonCustom from "./ButtonCustom";
 import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
+import { useEquipoStore } from "../../store/equipoStore";
+import { useEffect } from "react";
+import { useEquipoUsuario } from "../../equipo/hooks/useEquipoUsuario";
 
 export default function Header() {
 const navigate = useNavigate();
+const usuario = useUserStore((state) => state.usuario);
+const {equipo, setEquipo} = useEquipoStore();
+const {data: equipoUsuario} = useEquipoUsuario(usuario?.id ?? 0);
+
+useEffect(() =>{
+setEquipo(equipoUsuario ?? []) 
+},[]);
 
     return (
         <div className="mb-10">
@@ -27,7 +38,14 @@ const navigate = useNavigate();
                                 />
                             </div>
                             <div className="flex space-x-4">
-
+                                {
+                                    equipo.map(pokemon => (<div>
+                                        <img
+                                            key={pokemon.id}
+                                            src={pokemon.imagen}
+                                            className="max-h-7 2x1:max-h-14"/>
+                                        </div>))
+                                }
                             </div>
 
                         </div>
