@@ -7,18 +7,30 @@ interface CardPokemonProps {
 
 export default function CardPokemon({ pokemon, callback }: CardPokemonProps) {
 
-  const { nombre, imagen } = pokemon
+  const { nombre, imagen, id } = pokemon
 
   return (
     <div
       key={nombre}
-      className="bg-white/50 backdrop-blur-md rounded-lg p-4 flex flex-col items-center"
+      className="
+        flex flex-col items-center justify-center
+        bg-gradient-to-b from-slate-800 to-slate-700
+        rounded-2xl shadow-md hover:shadow-xl
+        hover:scale-105 transition-all duration-200
+        p-4 cursor-pointer border border-slate-600"
       onClick={() => {
         if (callback) callback(pokemon)
       }}
     >
-      <h2>{nombre}</h2>
-      <img src={imagen} alt={nombre} />
+      <img
+        src={imagen}
+        alt={nombre}
+        className="w-24 h-24 object-contain mb-2 drop-shadow-[0_2px_4px_rgba(0,0,0,0.4)]"
+      />
+      <p className="text-white font-semibold capitalize tracking-wide text-sm">
+        {nombre}
+      </p>
+      <span className="text-gray-400 text-xs mt-1">#{String(id).padStart(3, "0")}</span>
     </div>
   );
 }

@@ -29,7 +29,7 @@ export default function ListaEquipo() {
         </Flex>
         <Space h={'1g'} />
         <Flex align={'center'} justify={'center'}>
-            <div className="flex gap-2 p-10 bg-red-300 place-content-center rounded-3xl">
+            <div className="flex gap-2 p-10 bg-blue-300 place-content-center rounded-3xl">
                 {
                     equipoDraft.map((pokemon, index) => {
                         return (

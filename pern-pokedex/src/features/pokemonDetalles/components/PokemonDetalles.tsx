@@ -44,7 +44,7 @@ export default function PokemonDetalles({ pokemon }: PokemonDetallesProps) {
                 <Grid.Col span={6}>
                     <Flex justify={'center'} align={'center'} gap={20}>
                         <Image src="/pokeball.svg" alt="Pokeball" h={60} w={60} />
-                        <Text size="4rem" fw={700}>{nombre}</Text>
+                        <Text size="4rem" fw={700} className="uppercase font-bold">{nombre}</Text>
                     </Flex>
 
                     <Flex justify={'center'}>
