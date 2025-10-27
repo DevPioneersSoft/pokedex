@@ -1,12 +1,18 @@
+import { useEquipo } from "../../pokemonDetalles/hooks/useEquipo";
+import { useFavoritos } from "../../pokemonDetalles/hooks/useFavoritos";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void
+  favOrTeam: number
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback, favOrTeam }: CuadriculaProps) {
+
+  const{favoritos, agregar, toggleFav} = useFavoritos()
+
   const {
     pokemones,
     isLoading,
@@ -18,9 +24,20 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos:favoritos, favOrTeam });
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
+
+  const callbackFav = async (p:Pokemon) =>{
+    if(callback){
+      callback(p)
+    }
+    if(favOrTeam == 1){
+    await toggleFav(p);
+    await agregar.mutateAsync()
+    }
+  }
+
   return (
     <>
       <input
@@ -35,8 +52,8 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
           <CardPokemon
             key={pokemon.id}
             pokemon={pokemon}
-            callback={callback}
-          />
+            callback={callbackFav} 
+            selected={favoritos && favoritos.includes(pokemon.id)}/>
         ))}
       </div>
       {pokemones && (

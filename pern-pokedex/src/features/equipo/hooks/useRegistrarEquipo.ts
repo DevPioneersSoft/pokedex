@@ -1,0 +1,27 @@
+import { useMutation } from "@tanstack/react-query"
+import api from "../../../shered/utils/api"
+import type { Pokemon } from "../../cuadricula/interfaces/Pokemon.interface";
+
+export function useRegistrarEquipo() {
+  
+  return useMutation({
+    mutationFn: async (pokemonIds: number[]) => {
+        const payload = pokemonIds.map((id) => ({pokemonId: id}))
+        try{
+            const response = await api.post('/equipo', payload);
+            return response.data;
+        } catch(error : any){
+            throw new Error(
+                error?.response.data.message || 'Error al registrar su pokie'
+            )
+            
+        }
+
+    },
+    onSuccess: (data) => {
+      console.log('Equipo guardado exitosamente:', data);
+    }
+  });
+}
+
+

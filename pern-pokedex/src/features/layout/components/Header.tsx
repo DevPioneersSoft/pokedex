@@ -1,7 +1,25 @@
 import Sesion from "./Sesion";
 import ButtonCustom from "./ButtonCustom";
+import { useNavigate } from "react-router-dom";
+import { useUserStore } from "../store/userStore";
+import { useEquipoStore } from "../store/equipoStore";
+import { useEquipoUsuaario } from "../../equipo/hooks/useEquipoUsuario";
+import { useEffect } from "react";
 
 export default function Header() {
+
+    const navigate = useNavigate()
+
+    const usuario = useUserStore((state) => state.usuario)
+
+    const {equipo, setEquipo} = useEquipoStore()
+
+    const {data: equipoUsuario} = useEquipoUsuaario(usuario?.usuario.id ?? 0)
+
+    useEffect(() => {
+        setEquipo(equipoUsuario ?? [])
+    }, [equipoUsuario])
+
     return (
         <div className="mb-10">
             <div className="grid grid-cols-2">
@@ -9,6 +27,7 @@ export default function Header() {
                     <img
                         src="/pokedex-logo.png"
                         className="w-70 h-20"
+                        onClick={() => navigate("/")}
                     />
                 </div>
                 <div className="flex shadow-2xl p-2 rounded-2xl border-b-1 border-white grow">
@@ -19,11 +38,20 @@ export default function Header() {
                                     label="Mi equipo"
                                     color="warning"
                                     className="ml-10"
-
+                                    onClick={() => navigate("/equipo")}
                                 />
                             </div>
                             <div className="flex space-x-4">
+                                {
+                                    equipo.map(pokemon => <div>
+                                        <img
+                                            key={pokemon.id}
+                                            src={pokemon.imagen}
+                                            className="max-h-7 2xl:max-h-14"
+                                        />
 
+                                    </div>)
+                                }
                             </div>
 
                         </div>
