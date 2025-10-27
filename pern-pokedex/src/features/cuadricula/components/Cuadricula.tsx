@@ -1,3 +1,4 @@
+import { useUserStore } from "../../layout/store/userStore";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import useFavoritos from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
@@ -7,8 +8,11 @@ interface CuadriculaProps {
   callback?: (pokemon: Pokemon) => void;
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
-  const { favoritos, agregar, toggleFav } = useFavoritos()
+export default function Cuadricula({ callback, registrarFavortios = true }: CuadriculaProps) {
+
+  const usuario = useUserStore(state => state.usuario)
+
+  const { favoritos, agregar, toggleFav } = useFavoritos(usuario?.usuario.id)
 
   const {
     pokemones,
@@ -22,11 +26,12 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
   } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
 
   const onClickPokemon = async (pokemon: Pokemon) => {
-    toggleFav(pokemon);
-    await agregar.mutateAsync();
     if (callback) {
       callback(pokemon);
     }
+    if (!registrarFavortios) return
+    toggleFav(pokemon);
+    await agregar.mutateAsync();
   };
 
 

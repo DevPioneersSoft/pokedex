@@ -1,12 +1,10 @@
-import { useState } from "react";
-import Cuadricula from "./features/cuadricula/components/Cuadricula";
+import { Outlet } from "react-router-dom";
 import Header from "./features/layout/components/Header";
 import type { Pokemon } from "./features/cuadricula/interfaces/Pokemon.interface";
 import PokemonPreview from "./features/pokemonDetalles/components/PokemonPreview";
 import { useFavoritos } from "./features/cuadricula/hooks/useFavorito";
 
 function App() {
-  const [preview, setPreview] = useState<Pokemon | null>(null)
 
   return (
     <>
