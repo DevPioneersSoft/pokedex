@@ -8,9 +8,9 @@ const api = axios.create({
 
 api.interceptors.response.use((response) =>response, async (error) =>{
   const originalRequest = error.config;
-  const isAuth = originalRequest.url?.incudes('/autentication');
-  originalRequest.url.incudes('/autentication') &&
-  !originalRequest.url.incudes('/autentication/refresh')
+  const isAuth = originalRequest.url?.incudes('/autenticacion');
+  originalRequest.url.incudes('/autenticacion') &&
+  !originalRequest.url.incudes('/autenticacion/refresh')
   if(error.response?.status === 401 && !isAuth){
     try {
       await api.post('/autentication/refresh');
