@@ -3,7 +3,7 @@ import type { Pokemon } from "../interfaces/Pokemon.interface";
 interface CardPokemonProps {
   pokemon: Pokemon,
   callback?: (pokemon: Pokemon) => void,
-  selected:boolean
+  selected?:boolean
 }
 
 export default function CardPokemon({ pokemon, callback, selected }: CardPokemonProps) {
@@ -19,7 +19,7 @@ export default function CardPokemon({ pokemon, callback, selected }: CardPokemon
       }}
     >
       <h2>{nombre}</h2>
-      <img src={imagen} alt={nombre} />
+      <img src={imagen} alt={nombre} height={50} width={50}/>
     </div>
   );
 }

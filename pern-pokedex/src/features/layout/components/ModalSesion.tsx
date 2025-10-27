@@ -5,6 +5,8 @@ import {z} from "zod";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
 import { useCrearUsuario, useIniciarSesion } from "../../pokemonDetalles/hooks/useRegistro";
+import { useUserStore } from "../store/userStore";
+
 
 const LOGIN = z.object({
     username: z.string().min(5,"Usuario no válido"),
@@ -19,6 +21,7 @@ export default function ModalSesion({onOpened,onClose} : {onOpened : boolean, on
 
     const {mutate} = useIniciarSesion();
     const {mutate: crearUsuario} = useCrearUsuario();
+    const { setUser } = useUserStore();
 
     const form = useForm<formValue>({
         resolver:zodResolver(LOGIN),
@@ -32,7 +35,13 @@ export default function ModalSesion({onOpened,onClose} : {onOpened : boolean, on
         if(sesion){
             crearUsuario(data);
         }else{
-            mutate(data);
+            mutate(data,{
+                onSuccess: (data) =>{
+                    setUser(data);
+                    onClose();
+                    form.reset();
+                }                
+            });            
         }
     }
     
