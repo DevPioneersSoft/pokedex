@@ -1,0 +1,17 @@
+services:
+  bd_pokedex:
+    image: postgres:17
+    container_name: bd_pokedex
+    restart: always
+    environment:
+      POSTGRES_USER: devuser
+      POSTGRES_PASSWORD: devpassword
+      POSTGRES_DB: pokedex
+      TZ: America/Tijuana
+    ports:
+      - "5432:5432"
+    volumes:
+      - bd_pokedex:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro  
+volumes:
+  bd_pokedex:
