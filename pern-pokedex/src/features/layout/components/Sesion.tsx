@@ -14,7 +14,7 @@ export default function Sesion() {
           <Menu.Target>
             <Avatar
               size={50}
-              name={usuario?.username || "Invitado"}
+              name={usuario?.usuario?.username || "Invitado"}
               color="initials"
               className="cursor-pointer"
               allowedInitialsColors={["var(--color-secondary-600)"]}
@@ -31,7 +31,7 @@ export default function Sesion() {
                 color: "var(--color-primary-500)",
               }}
             >
-              {usuario?.username || "Invitado"}
+              {usuario?.usuario?.username || "Invitado"}
             </Menu.Label>
             <Menu.Item
               onClick={() => setModal(true)}
