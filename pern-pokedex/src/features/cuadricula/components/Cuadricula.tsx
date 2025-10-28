@@ -1,12 +1,20 @@
+import { useUserStore } from "../../layout/store/userStore";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
+import useFavoritos from "../hooks/useFavoritos";
 import type { Pokemon } from "../interfaces/Pokemon.interface";
 import CardPokemon from "./CardPokemon";
 
 interface CuadriculaProps {
-  callback?: (pokemon: Pokemon) => void
+  callback?: (pokemon: Pokemon) => void,
+  registrarFavortios?: boolean
 }
 
-export default function Cuadricula({ callback }: CuadriculaProps) {
+export default function Cuadricula({ callback, registrarFavortios = true }: CuadriculaProps) {
+
+  const usuario = useUserStore(state => state.usuario)
+
+  const { favoritos, agregar, toggleFav } = useFavoritos(usuario?.usuario.id)
+
   const {
     pokemones,
     isLoading,
@@ -18,7 +26,18 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
     page,
     totalPages,
     searchPokemons,
-  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30 });
+  } = useBuscarPokemones({ initialPage: 1, initialPageSize: 30, favoritos });
+
+  const onClickPokemon = async (pokemon: Pokemon) => {
+    if (callback) {
+      callback(pokemon);
+    }
+    if (!registrarFavortios) return
+    toggleFav(pokemon);
+    await agregar.mutateAsync();
+  };
+
+
   if (isLoading) return <div>Cargando...</div>;
   if (isFetching) return <div>Refrescando...</div>;
   return (
@@ -31,13 +50,27 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
       />
       <div className="grid gap-3 [grid-template-columns:repeat(auto-fit,minmax(theme(spacing.28),1fr))] rounded-2xl p-6">
 
-        {pokemones?.map((pokemon: Pokemon) => (
-          <CardPokemon
+        {pokemones?.map((pokemon: Pokemon) => {
+          const isSelected = favoritos.includes(pokemon.id);
+
+          return <div
             key={pokemon.id}
-            pokemon={pokemon}
-            callback={callback}
-          />
-        ))}
+            style={{
+              background: favoritos.includes(pokemon.id)
+                ? "#ffe066"
+                : undefined,
+            }}
+            className={`w-28 rounded-xl relative ${isSelected ? "ring-4 ring-yellow-600" : ""
+              }`}
+          >
+            <CardPokemon
+              key={pokemon.id}
+              pokemon={pokemon}
+              callback={onClickPokemon}
+            />
+
+          </div>
+        })}
       </div>
       {pokemones && (
         <div className="flex justify-center items-center mt-4 gap-2">
