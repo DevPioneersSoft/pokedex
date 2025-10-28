@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
+import { ImportarPokemonesModule } from './importar-pokemones/importar-pokemones.module';
 import { PokemonModule } from './pokemon/pokemon.module';
-import { PruebaModule } from './prueba/prueba.module';
 
 @Module({
-  imports: [PruebaModule, PokemonModule],
+  imports: [PokemonModule, ImportarPokemonesModule],
   controllers: [],
   providers: [],
 })
-export class AppModule {}
+export class AppModule { }
