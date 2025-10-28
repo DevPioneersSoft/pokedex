@@ -25,11 +25,11 @@ export default function Equipo() {
 
     return (
         <>
-        <div className="grid grid-cols-12 ml-20 mt-10">
-            <div className="col-span-6 z-20">
+        <div className="grid grid-cols-12 ml-10 mt-10">
+            <div className="col-span-5 z-20">
             <Cuadricula callback={pokemon => addPokemon(pokemon)} />
             </div>
-            <div className="col-span-4 z-50 sticky top-0 self-start">
+            <div className="col-span-6 z-50 sticky top-0 self-start">
                <ListaEquipo />
                 </div>
             </div>

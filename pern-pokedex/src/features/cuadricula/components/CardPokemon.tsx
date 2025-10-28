@@ -47,14 +47,11 @@ export default function CardPokemon({ pokemon, esFavorito = false, toggleFavorit
             textTransform: "capitalize"
           }}>{nombre}</h2>
       <img src={imagen} alt={nombre} 
-        style={{ 
-            width: '70%', 
-            height: '70%',
-            objectFit: 'contain' 
-        }}/>
+      className="max-h-14 2xl:max-h-24" 
+        />
         <h3 style={{
             textAlign: "center",
-            color: "gray",
+            color: "white",
           }}>{`#${id}`}</h3>
     </div>
   );
