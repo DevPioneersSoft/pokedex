@@ -1,8 +1,10 @@
 import { create } from "zustand";
 
 export interface UserDto {
-  id: number;
-  username: string;
+  usuario: {
+    id: number;
+    username: string;
+  }
 }
 
 type UserStore = {

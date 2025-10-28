@@ -1,24 +1,4 @@
 services:
-  backend:
-    image: phurion222/pokedex-backend:latest
-    container_name: pokedex_backend
-    restart: always
-    environment:
-      - DATABASE_URL=postgresql://devuser:devpassword@bd_pokedex:5432/pokedex
-      - NODE_ENV=production
-      - JWT_SECRET=mi_jwt_secreto_super_seguro_para_produccion_123456
-      - JWT_REFRESH_SECRET=mi_jwt_refresh_secreto_super_seguro_para_produccion_789
-      - JWT_EXPIRES_IN=7d
-      - JWT_REFRESH_EXPIRES_IN=30d
-      - PORT=3000
-    ports:
-      - "3000:3000"
-    depends_on:
-      bd_pokedex:
-        condition: service_healthy
-    networks:
-      - pokedex_network
-
   bd_pokedex:
     image: postgres:latest
     container_name: bd_pokedex
@@ -33,18 +13,8 @@ services:
     volumes:
       - bd_pokedex:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro
-    networks:
-      - pokedex_network
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U devuser -d pokedex"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
-
+      
 volumes:
   bd_pokedex:
 
-networks:
-  pokedex_network:
-    driver: bridge
+
