@@ -51,7 +51,7 @@ export default function CardPokemon({ pokemon, esFavorito = false, toggleFavorit
         />
         <h3 style={{
             textAlign: "center",
-            color: "white",
+            color: "lightblue",
           }}>{`#${id}`}</h3>
     </div>
   );
