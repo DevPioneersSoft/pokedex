@@ -1,5 +1,4 @@
 import type { Pokemon } from "../interfaces/Pokemon.interface";
-import { IconHeart } from '@tabler/icons-react';
 
 interface CardPokemonProps {
   pokemon: Pokemon,

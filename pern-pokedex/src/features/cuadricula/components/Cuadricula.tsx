@@ -1,4 +1,3 @@
-import { useEquipo } from "../../pokemonDetalles/hooks/useEquipo";
 import { useFavoritos } from "../../pokemonDetalles/hooks/useFavoritos";
 import { useBuscarPokemones } from "../hooks/useBuscarPokemones.hook";
 import type { Pokemon } from "../interfaces/Pokemon.interface";

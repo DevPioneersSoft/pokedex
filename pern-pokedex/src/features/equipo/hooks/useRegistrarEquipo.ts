@@ -1,6 +1,5 @@
 import { useMutation } from "@tanstack/react-query"
 import api from "../../../shered/utils/api"
-import type { Pokemon } from "../../cuadricula/interfaces/Pokemon.interface";
 
 export function useRegistrarEquipo() {
   
