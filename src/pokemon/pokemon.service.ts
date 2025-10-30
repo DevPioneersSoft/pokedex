@@ -22,7 +22,18 @@ export class PokemonService {
 
   async findAll(): Promise<Pokemon[]> {
     try {
-      return await this.prisma.pokemon.findMany();
+      return await this.prisma.pokemon.findMany({
+        take: 10,
+        skip: 0,
+        where:{
+          nombre:{
+            startsWith: 'b'
+          },
+          vida:{
+            gte:45
+          }
+        }
+      });
     } catch (error) {
       throw error;
     }

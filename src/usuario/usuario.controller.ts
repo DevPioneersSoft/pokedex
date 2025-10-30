@@ -8,8 +8,7 @@ export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) {}
 
   @Post()
-  create(@Body() data: CreateUsuarioDto) {
-    console.log(`Desde controlador data :${data}`)
+  create(@Body() data: CreateUsuarioDto) {    
     return this.usuarioService.create(data);
   }
 

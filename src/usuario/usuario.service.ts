@@ -4,19 +4,36 @@ import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Usuario } from './entities/usuario.entity';
 import { UsuarioDto } from './dto/usuario.dto';
+import * as argon2 from 'argon2';
 
 @Injectable()
 export class UsuarioService {
 
-  constructor(private readonly prisma: PrismaService){}
+  private config: argon2.Options
+
+  constructor(private readonly prisma: PrismaService){
+    this.config = {
+      type:argon2.argon2id,
+      memoryCost: 2 ** 16,
+      hashLength: 50,
+      parallelism: 2
+    }
+  }
 
   async create(data: CreateUsuarioDto) : Promise<Usuario>{
     try {
-      console.log(data)
+      
+      if(data.contrasena){
+          const hash = await argon2.hash(data.contrasena, this.config);
+          data.contrasena = hash;
+      }
       return await this.prisma.usuario.create({
         data : data
       });
     } catch (error) {
+      if(error.code === 'P2022'){
+            throw new NotFoundException(`Ya existe un usuario con ese nombre: ${data.username}`);
+      }
       throw error;
     }
   }
@@ -43,6 +60,12 @@ export class UsuarioService {
 
   async update(id: number, data: UpdateUsuarioDto) : Promise<Usuario> {
     try {
+
+       if(data.contrasena){
+          const hash = await argon2.hash(data.contrasena, this.config);
+          data.contrasena = hash;
+      }
+
       return await this.prisma.usuario.update({
         where : {
           id
@@ -63,7 +86,7 @@ export class UsuarioService {
       });
     } catch (error) {
        if(error.code === 'P2025'){
-              throw new NotFoundException(`No se encontró el pokemon con id: ${id}`);
+              throw new NotFoundException(`No se encontró el usuario con id: ${id}`);
         }
       throw error
     }
