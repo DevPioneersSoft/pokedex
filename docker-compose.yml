@@ -9,7 +9,7 @@ services:
       POSTGRES_DB: pokedex
       TZ: America/Tijuana
     ports:
-      - "5432:5432"
+      - "5000:5432"
     volumes:
       - bd_pokedex:/var/lib/postgresql/data
       - /etc/localtime:/etc/localtime:ro

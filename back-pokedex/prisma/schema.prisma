@@ -5,13 +5,8 @@
 // Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
 
 generator client {
-<<<<<<< HEAD
-  provider = "prisma-client"
-  output   = "../generated/prisma"
-=======
   provider     = "prisma-client"
   output       = "../generated/prisma"
->>>>>>> back
   moduleFormat = "cjs"
 }
 
@@ -20,28 +15,6 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-<<<<<<< HEAD
-model pokemon{
-  id Int @id
-  nombre String @db.VarChar(255)
-  descripcion String @db.VarChar(255)
-  grunido String @db.VarChar(255)
-  imagen String @db.VarChar(255)
-  vida Int
-  ataque Int
-  defensa Int
-  ataqueEspecial Int @map("ataque_especial")
-  defensaEspecial Int @map("defensa_especial")
-  velocidad Int
-  tipo_pokemon tipo_pokemon[]
-}
-
-  model tipo_pokemon{
-    id Int @id @default(autoincrement())
-    nombre String @unique @db.VarChar(255)
-    pokemones pokemon[]
-  }
-=======
 model pokemon {
   id              Int            @id
   nombre          String         @db.VarChar(255)
@@ -68,4 +41,4 @@ model usuario {
   username   String @unique
   contrasena String
 }
->>>>>>> back
+

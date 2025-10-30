@@ -5,6 +5,7 @@ CREATE TABLE "pokemon" (
     "descripcion" VARCHAR(255) NOT NULL,
     "grunido" VARCHAR(255) NOT NULL,
     "imagen" VARCHAR(255) NOT NULL,
+    "vida" INTEGER NOT NULL,
     "ataque" INTEGER NOT NULL,
     "defensa" INTEGER NOT NULL,
     "ataque_especial" INTEGER NOT NULL,
@@ -23,6 +24,15 @@ CREATE TABLE "tipo_pokemon" (
 );
 
 -- CreateTable
+CREATE TABLE "usuario" (
+    "id" SERIAL NOT NULL,
+    "username" TEXT NOT NULL,
+    "contrasena" TEXT NOT NULL,
+
+    CONSTRAINT "usuario_pkey" PRIMARY KEY ("id")
+);
+
+-- CreateTable
 CREATE TABLE "_pokemonTotipo_pokemon" (
     "A" INTEGER NOT NULL,
     "B" INTEGER NOT NULL,
@@ -32,6 +42,9 @@ CREATE TABLE "_pokemonTotipo_pokemon" (
 
 -- CreateIndex
 CREATE UNIQUE INDEX "tipo_pokemon_nombre_key" ON "tipo_pokemon"("nombre");
+
+-- CreateIndex
+CREATE UNIQUE INDEX "usuario_username_key" ON "usuario"("username");
 
 -- CreateIndex
 CREATE INDEX "_pokemonTotipo_pokemon_B_index" ON "_pokemonTotipo_pokemon"("B");
