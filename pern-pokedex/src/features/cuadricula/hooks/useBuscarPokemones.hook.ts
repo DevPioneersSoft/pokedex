@@ -7,7 +7,7 @@ export interface UseBuscarPokemonesParams {
   initialPage?: number;
   initialPageSize?: number;
   initialSearch?: string;
-  favoritos?:number[]
+  favoritos:number[]
 }
 
 export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
@@ -44,14 +44,15 @@ export function useBuscarPokemones(hookParams?: UseBuscarPokemonesParams) {
     },
   });
 
-const pokemonOrdenados = useMemo(()=>{
-  if(!query.data?.data)
-    return []
-  const lista =new Set(hookParams?.favoritos)
-  const f = query.data.data.filter(p => lista.has(p.id))
-  const fr = query.data.data.filter(p => !lista.has(p.id))
-  return [...f, ...fr]
-},[query.data?.data, hookParams?.favoritos])
+  const pokemonOrdenados =  useMemo(()=>{
+    if(!query.data?.data)
+      return []
+    
+    const lista = new Set(hookParams?.favoritos)
+    const _f = query.data.data.filter(p=> lista.has(p.id))
+    const _fr = query.data.data.filter(p=> !lista.has(p.id))
+    return [..._f, ..._fr]
+  },[query.data?.data, hookParams?.favoritos])
 
   const nextPage = () => {
     if (query.data?.hasNextPage) {
@@ -71,7 +72,7 @@ const pokemonOrdenados = useMemo(()=>{
   };
 
   return {
-    pokemones: pokemonOrdenados ,
+    pokemones: pokemonOrdenados,
     isLoading: query.isLoading,
     refetch: query.refetch,
     isFetching: query.isFetching,

@@ -1,8 +1,13 @@
+<<<<<<< HEAD
 import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+=======
+import { Controller, Get } from '@nestjs/common';
+>>>>>>> back
 import { ImportarPokemonesService } from './importar-pokemones.service';
 
 @Controller('importar-pokemones')
 export class ImportarPokemonesController {
+<<<<<<< HEAD
   constructor(private readonly importarPokemonesService: ImportarPokemonesService) {}
 
   // @Post()
@@ -30,3 +35,12 @@ export class ImportarPokemonesController {
 //     return this.importarPokemonesService.remove(+id);
 //   }
  }
+=======
+  constructor(private readonly importarPokemonesService: ImportarPokemonesService) { }
+
+  @Get()
+  inportarPokemon() {
+    return this.importarPokemonesService.importar();
+  }
+}
+>>>>>>> back

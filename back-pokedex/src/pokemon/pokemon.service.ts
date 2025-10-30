@@ -1,26 +1,74 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
+import { PokemonDto } from './dto/pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { Pokemon } from './entities/pokemon.entity';
 
 @Injectable()
 export class PokemonService {
-  create(createPokemonDto: CreatePokemonDto) {
-    return 'This action adds a new pokemon';
+
+  constructor(private readonly prisma: PrismaService) { }
+
+  async create(data: CreatePokemonDto): Promise<Pokemon> {
+    try {
+      return await this.prisma.pokemon.create({
+        data
+      })
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findAll() {
-    return `This action returns all pokemon`;
+  async findAll(): Promise<Pokemon[]> {
+    try {
+      return await this.prisma.pokemon.findMany();
+    } catch (error) {
+      throw error;
+    }
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} pokemon`;
+  async findOne(id: number): Promise<PokemonDto | null> {
+    try {
+      return await this.prisma.pokemon.findUnique({
+        where: {
+          id
+        },
+        include: {
+          tipoPokemon: true
+        }
+      });
+    } catch (error) {
+      throw error;
+    }
   }
 
-  update(id: number, updatePokemonDto: UpdatePokemonDto) {
-    return `This action updates a #${id} pokemon`;
+  async update(id: number, data: UpdatePokemonDto): Promise<Pokemon> {
+    try {
+      return await this.prisma.pokemon.update({
+        where: {
+          id
+        },
+        data
+      })
+    } catch (error) {
+      throw error;
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} pokemon`;
+  async remove(id: number): Promise<Pokemon> {
+    try {
+      return await this.prisma.pokemon.delete({
+        where: {
+          id
+        }
+      })
+    } catch (error) {
+      if (error.code === 'P2025') {
+        throw new NotFoundException(`No se encontró el pokemon con id: ${id}`)
+      }
+      throw error;
+    }
   }
 }
+
