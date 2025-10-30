@@ -35,3 +35,9 @@ model tipo_pokemon{
   nombre String @unique @db.VarChar(255)
   pokemones pokemon[]
 }
+
+model usuario{
+  id Int @id @default(autoincrement())
+  username String @unique @db.VarChar(255)
+  contrasena String @db.VarChar(255)
+}

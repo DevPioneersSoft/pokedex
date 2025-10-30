@@ -5,6 +5,7 @@ import { ImportarPokemonesModule } from './importar-pokemones/importar-pokemones
 import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { PokemonModule } from './pokemon/pokemon.module';
+import { UsuarioModule } from './usuario/usuario.module';
 
 @Module({
   imports: [
@@ -12,7 +13,8 @@ import { PokemonModule } from './pokemon/pokemon.module';
       isGlobal:true
     }),
     PokemonModule,
-    ImportarPokemonesModule
+    ImportarPokemonesModule,
+    UsuarioModule
   ],
   controllers: [],
   providers: [PrismaService],
