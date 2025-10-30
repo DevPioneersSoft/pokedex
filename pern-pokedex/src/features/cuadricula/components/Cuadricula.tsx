@@ -56,7 +56,13 @@ export default function Cuadricula({ callback }: CuadriculaProps) {
             }}
             className={`w-28 rounded-xl relative ${isSelected ? "ring-4 ring-yellow-600" : ""
               }`}
+              
+
+              
+              
           >
+           
+
             <CardPokemon
               key={pokemon.id}
               pokemon={pokemon}

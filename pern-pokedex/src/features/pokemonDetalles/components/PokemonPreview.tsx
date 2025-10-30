@@ -14,9 +14,9 @@ export default function PokemonPreview(pokemon: Pokemon) {
 
   return (
     <>
-      <div className="overflow-hidden h-full w-full relative">
+      <div className="overflow">
         <div
-          className="absolute inset-0 rounded-2xl overflow-hidden bg-secondary-300/80 text-white shadow-xl border border-white/10"
+          className="absolute inset-0 rounded-2xl overflow-hidden"
           style={{
             transform:
               "perspective(1000px) rotateY(-20deg) translateX(-20%) translateY(-5%)",
