@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model Pokemon {
+  id            Int          @id @default(autoincrement())
+  numero        Int          @unique
+  nombre        String       @unique @db.VarChar(250)
+  descripcion   String       @db.VarChar(250)
+  grunido       String       @db.VarChar(250)
+  imagen        String       @db.VarChar(350)
+  ataque        Int 
+  defensa       Int
+  ataque_especial Int
+  defensa_especial Int
+  velocidad     Int
+  altura        Int
+  peso          Int
+  sprite        String       @db.VarChar(250)
+  orden         Int
+  creadoEn      DateTime     @default(now())
+  actualizadoEn DateTime     @updatedAt
+  tipos         PokemonTipo[]
+  @@map("pokemon")
+}
+
+model tipoPokemon {
+  id       Int           @id @default(autoincrement())
+  nombre   String        @unique
+  pokemones PokemonTipo[]
+  @@map("tipo_pokemon")
+}
+
+model PokemonTipo {
+  id            Int          @id @default(autoincrement())
+  pokemon       Pokemon      @relation(fields: [pokemonId], references: [id])
+  pokemonId     Int
+  tipoPokemon   tipoPokemon   @relation(fields: [tipoPokemonId], references: [id])
+  tipoPokemonId Int
+
+  @@unique([pokemonId, tipoPokemonId])
+  @@map("pokemon_tipo")
+}
+
+model Usuario {
+  id         Int    @id @default(autoincrement())
+  username   String @unique
+  contrasena String
+  @@map("usuario")
+}

@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "pokemon" ALTER COLUMN "imagen" SET DATA TYPE VARCHAR(350);
