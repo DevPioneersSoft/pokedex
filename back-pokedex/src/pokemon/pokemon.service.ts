@@ -1,5 +1,8 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { PrismaQueryParamsDto } from 'src/shared/dto/prisma-query-params.dto';
+import { buildPaginatedResponse } from 'src/shared/helpers/build-paginated-response';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { PokemonDto } from './dto/pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
@@ -20,9 +23,17 @@ export class PokemonService {
     }
   }
 
-  async findAll(): Promise<Pokemon[]> {
+  async findAll(params: PrismaQueryParamsDto): Promise<PaginatedResponseDto<Pokemon>> {
+
+    const { skip, take, where, orderBy } = params;
+
     try {
-      return await this.prisma.pokemon.findMany();
+      const [data, total] = await Promise.all([
+        this.prisma.pokemon.findMany({ skip, take, where, orderBy }),
+        this.prisma.pokemon.count({ where })
+      ]);
+
+      return buildPaginatedResponse({ data, total, skip, take })
     } catch (error) {
       throw error;
     }
