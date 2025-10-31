@@ -1,7 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
 import { PokemonService } from './pokemon.service';
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { PrismaQueryParamsDto } from 'src/shared/dto/prisma-query-params.dto';
+import { ApiPrismaQuery } from 'src/shared/decorators/api-prisma-query.decorator';
+import { ApiPaginatedResponse } from 'src/shared/decorators/paginated-respone.decorator';
+import { Pokemon } from './entities/pokemon.entity';
 
 @Controller('pokemon')
 export class PokemonController {
@@ -13,8 +18,10 @@ export class PokemonController {
   }
 
   @Get()
-  findAll() {
-    return this.pokemonService.findAll();
+  @ApiPrismaQuery()
+  @ApiPaginatedResponse(Pokemon)
+  findAll(@Query() query : PrismaQueryParamsDto) {
+    return this.pokemonService.findAll(query);
   }
 
   @Get(':id')

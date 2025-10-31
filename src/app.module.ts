@@ -6,6 +6,7 @@ import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { UsuarioModule } from './usuario/usuario.module';
+import { FavoritosService } from './favoritos/favoritos.service';
 
 @Module({
   imports: [
@@ -17,6 +18,6 @@ import { UsuarioModule } from './usuario/usuario.module';
     UsuarioModule
   ],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, FavoritosService],
 })
 export class AppModule {}

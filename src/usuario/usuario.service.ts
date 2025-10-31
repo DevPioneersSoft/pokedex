@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
@@ -31,8 +31,8 @@ export class UsuarioService {
         data : data
       });
     } catch (error) {
-      if(error.code === 'P2022'){
-            throw new NotFoundException(`Ya existe un usuario con ese nombre: ${data.username}`);
+      if(error.code === 'P2002'){
+            throw new ConflictException(`Ya existe un usuario con ese nombre: ${data.username}`);
       }
       throw error;
     }
