@@ -3,7 +3,9 @@ import { ImportarPokemonesService } from './importar-pokemones.service';
 
 @Controller('importar-pokemones')
 export class ImportarPokemonesController {
-  constructor(private readonly importarPokemonesService: ImportarPokemonesService) { }
+  constructor(
+    private readonly importarPokemonesService: ImportarPokemonesService,
+  ) {}
 
   @Get()
   inportarPokemon() {

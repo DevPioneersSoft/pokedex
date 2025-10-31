@@ -1,19 +1,25 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  Patch,
+  Post,
+  Query,
 } from '@nestjs/common';
-import { PokemonService } from './pokemon.service';
+
 import { CreatePokemonDto } from './dto/create-pokemon.dto';
 import { UpdatePokemonDto } from './dto/update-pokemon.dto';
+import { Pokemon } from './entities/pokemon.entity';
+import { PokemonService } from './pokemon.service';
+import { ApiPrismaQuery } from 'src/shared/decorators/api-prisma-query.decorator';
+import { ApiPaginatedResponse } from 'src/shared/decorators/paginated-response.decorator';
+import { PrismaQueryParamsDto } from 'src/shared/dto/prisma-query-params.dto';
 
 @Controller('pokemon')
 export class PokemonController {
-  constructor(private readonly pokemonService: PokemonService) {}
+  constructor(private readonly pokemonService: PokemonService) { }
 
   @Post()
   create(@Body() createPokemonDto: CreatePokemonDto) {
@@ -21,8 +27,10 @@ export class PokemonController {
   }
 
   @Get()
-  findAll() {
-    return this.pokemonService.findAll();
+  @ApiPrismaQuery()
+  @ApiPaginatedResponse(Pokemon)
+  findAll(@Query() query: PrismaQueryParamsDto) {
+    return this.pokemonService.findAll(query);
   }
 
   @Get(':id')
@@ -40,4 +48,3 @@ export class PokemonController {
     return this.pokemonService.remove(+id);
   }
 }
-
