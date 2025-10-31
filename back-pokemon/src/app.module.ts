@@ -3,11 +3,12 @@ import { PokemonModule } from './pokemon/pokemon.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { PrismaService } from './prisma.service';
 import { ConfigModule } from '@nestjs/config';
+import { FavoritosService } from './favoritos/favoritos.service';
 
 @Module({
   imports: [PokemonModule, UsuarioModule, ConfigModule.forRoot({ isGlobal: true })],
   controllers: [],
-  providers: [PrismaService],
+  providers: [PrismaService, FavoritosService],
   exports: [PrismaService],
 })
 export class AppModule {}

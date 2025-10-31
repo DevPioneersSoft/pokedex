@@ -28,6 +28,7 @@ model Pokemon {
   creadoEn      DateTime     @default(now())
   actualizadoEn DateTime     @updatedAt
   tipos         PokemonTipo[]
+  usuariosDeFavorito Usuario[] @relation("favoritos")
   @@map("pokemon")
 }
 
@@ -53,5 +54,6 @@ model Usuario {
   id         Int    @id @default(autoincrement())
   username   String @unique
   contrasena String
+  favoritos  Pokemon[] @relation("favoritos")
   @@map("usuario")
 }

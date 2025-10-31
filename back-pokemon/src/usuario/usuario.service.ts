@@ -38,7 +38,10 @@ export class UsuarioService {
   }
 
   findOne(id: number) {
-    return this.prisma.usuario.findUnique({ where: { id } });
+    return this.prisma.usuario.findUnique({
+      where: { id },
+      include: { favoritos: true },
+    });
   }
 
   async update(id: number, updateUsuarioDto: UpdateUsuarioDto) {
