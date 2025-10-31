@@ -7,6 +7,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { FavoritosDto } from './usuario/dto/favoritos.dto';
 import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
 // import { FavoritosService } from './favoritos/favoritos.service';
+import { EquipoModule } from './equipo/equipo.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
     PokemonModule,
     ImportarPokemonesModule,
     UsuarioModule,
+    EquipoModule,
   ],
   controllers: [],
   providers: [
