@@ -1,9 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors } from '@nestjs/common';
+import { LoggingInterceptor } from '../shared/interceptores/Loggin.interceptor';
 import { UsuarioService } from './usuario.service';
 import { FavoritosService } from '../favoritos/favoritos.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
+@UseInterceptors(LoggingInterceptor)
 @Controller('usuario')
 export class UsuarioController {
   constructor(
