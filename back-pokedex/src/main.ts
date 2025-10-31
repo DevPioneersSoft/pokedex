@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
-      forbidNonWhitelisted: true
+      forbidNonWhitelisted: true,
     }),
   );
 
@@ -18,13 +18,16 @@ async function bootstrap() {
     .setTitle('Pokedex')
     .setDescription('APIRest para la Pokedex')
     .setVersion('1.0')
-    .build()
+    .build();
 
   const content = SwaggerModule.createDocument(app, config);
 
-  app.use('/docs', apiReference({
-    content
-  }))
+  app.use(
+    '/docs',
+    apiReference({
+      content,
+    }),
+  );
 
   await app.listen(process.env.PORT ?? 3000);
 }
