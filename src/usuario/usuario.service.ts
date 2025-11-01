@@ -60,7 +60,10 @@ export class UsuarioService {
       return await this.prisma.usuario.findUnique({
         where: {
           id
-        }
+        },
+        include:{
+          favoritos:true
+        },
       })
     } catch (error) {
       throw error

@@ -14,9 +14,9 @@ export class LoggingInterceptor implements NestInterceptor{
         finalize(()=>{
             const elapsed = Date.now() - starTime;
             const res = ctx.getResponse();
-            const estatus = res?.statuscode??'NA';
+            const estatus = res?.statusCode??'NA';
 
-            this.logger.log(`${method} ${url} - ${elapsed}ms ${estatus}`)
+            this.logger.log(`${method} ${url} - ${elapsed}ms -  ${estatus}`)
         })
        ) 
     }

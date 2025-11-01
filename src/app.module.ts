@@ -5,13 +5,17 @@ import { PrismaService } from './prisma/prisma.service';
 import {ConfigModule} from '@nestjs/config'
 import { UsuarioModule } from './usuario/usuario.module';
 import { FavoritosService } from './favoritos/favoritos.service';
+import { LoggingInterceptor } from './shared/interceptor/logging.interceptor';
 @Module({
   imports: [
     ConfigModule.forRoot({
     isGlobal:true
   }) ,PokemonModule, ImportarPokemonesModule, UsuarioModule],
   controllers: [],
-  providers: [PrismaService, FavoritosService],
+  providers: [PrismaService, FavoritosService,{
+    provide:'APP_LOGGINS_INTERCEPTOR', //// esta es la forma mas apropieda apra usar el interceptor segun la documentacion.
+    useClass:LoggingInterceptor
+  }],
 })
 export class AppModule {}
  
