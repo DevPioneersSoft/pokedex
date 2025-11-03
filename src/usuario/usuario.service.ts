@@ -38,9 +38,13 @@ export class UsuarioService {
     }
   }
 
-  async findAll(): Promise<Usuario[]>{
+  async findAll(): Promise<UsuarioDto[]>{
     try {
-      return await this.prisma.usuario.findMany();
+      return await this.prisma.usuario.findMany({
+        include:{
+          favoritos: true
+        }
+      });
     } catch (error) {
       throw error;
     }
@@ -51,6 +55,9 @@ export class UsuarioService {
       return await this.prisma.usuario.findUnique({
         where: {
           id
+        },
+        include:{
+          favoritos: true
         }        
       });
     } catch (error) {

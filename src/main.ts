@@ -3,6 +3,8 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
+import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
+import { PokedexLoggerMiddleware } from './pokedex-logger/pokedex.logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -14,6 +16,8 @@ async function bootstrap() {
       forbidNonWhitelisted: true//bloquea peticiones de solcitudes que vengan con atributos no definidos
     })
   );
+
+  app.use(new PokedexLoggerMiddleware().use)
 
   const config = new DocumentBuilder()
   .setTitle('Pokedex')

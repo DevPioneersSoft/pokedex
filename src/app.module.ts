@@ -7,6 +7,9 @@ import { ConfigModule } from '@nestjs/config';
 import { PokemonModule } from './pokemon/pokemon.module';
 import { UsuarioModule } from './usuario/usuario.module';
 import { FavoritosService } from './favoritos/favoritos.service';
+import { FavoritosModule } from './favoritos/favoritos.module';
+import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
+import { EquipoModule } from './equipo/equipo.module';
 
 @Module({
   imports: [
@@ -15,9 +18,14 @@ import { FavoritosService } from './favoritos/favoritos.service';
     }),
     PokemonModule,
     ImportarPokemonesModule,
-    UsuarioModule
+    UsuarioModule,
+    FavoritosModule,
+    EquipoModule
   ],
   controllers: [],
-  providers: [PrismaService, FavoritosService],
+  providers: [PrismaService,{
+    provide : 'APP_INTERCEPTOR',
+    useClass: LoggingInterceptor
+  }],
 })
 export class AppModule {}

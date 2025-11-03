@@ -1,16 +1,17 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { FavoritoDto } from './dto/favorito.dto';
 
 @Injectable()
 export class FavoritosService {
     constructor(private readonly prisma : PrismaService){}
 
-    async actualizarFavoritos(pokemonesIds: number[], usuarioId: number) : Promise<void>{
+    async actualizarFavoritos(data : FavoritoDto) : Promise<void>{
         await this.prisma.usuario.update({
-            where : {id : usuarioId},
+            where : {id : data.usuarioId},
             data: {
                 favoritos:{
-                    set: pokemonesIds.map(id =>({id}))
+                    set: data.pokemonesIds.map(id =>({id}))
                 }
             }
         });
