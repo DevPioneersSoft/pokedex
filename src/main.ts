@@ -3,9 +3,11 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import {apiReference} from '@scalar/nestjs-api-reference'
 import { ValidationPipe } from '@nestjs/common';
+import { PokedexLoggerMiddleware } from './pokedex-logger/pokedex-logger.middleware';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(new PokedexLoggerMiddleware().use)
   app.useGlobalPipes( new ValidationPipe({
     whitelist: true,
     forbidNonWhitelisted: true
