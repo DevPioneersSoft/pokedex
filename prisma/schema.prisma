@@ -29,6 +29,7 @@ model pokemon{
   velocidad Int
   tipoPokemon tipo_pokemon[]
   usuariosFavoritos usuario[] @relation("favoritos")
+  equipos equipo[] @relation("pokemon_equipo")
 }
 
 model tipo_pokemon{
@@ -42,4 +43,13 @@ model usuario{
   username String @unique @db.VarChar(255)
   contrasena String @db.VarChar(255)
   favoritos pokemon[] @relation("favoritos")
+  equipos equipo[]
+}
+
+model equipo{
+   id Int @id @default(autoincrement())   
+   id_usuario Int
+   nombre String @unique @db.VarChar(255)   
+   pokemones  pokemon[] @relation("pokemon_equipo")
+   usuario usuario   @relation(fields: [id_usuario], references: [id])
 }

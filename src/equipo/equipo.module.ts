@@ -4,10 +4,11 @@ import { EquipoController } from './equipo.controller';
 import { MiddlewareBuilder } from '@nestjs/core';
 import { ShinyMiddleware } from 'src/shiny/shiny.middleware';
 import { Exclude } from 'class-transformer';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
   controllers: [EquipoController],
-  providers: [EquipoService],
+  providers: [EquipoService, PrismaService],
 })
 export class EquipoModule {
   configure(consumer: MiddlewareBuilder){
