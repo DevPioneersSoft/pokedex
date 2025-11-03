@@ -1,11 +1,13 @@
 import { Avatar, Menu } from "@mantine/core";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import ModalSesion from "./ModalSesion";
 import { useUserStore } from "../store/userStore";
 
 export default function Session() {
   const [opened, setOpened] = useState(false);
   const { usuario, logout } = useUserStore();
+  const navigate = useNavigate();
 
   return (
     <div className="mr-10">
@@ -49,7 +51,7 @@ export default function Session() {
             <Menu.Item
               onClick={() => {
                 logout();
-                localStorage.removeItem('usuario');
+                navigate('/');
               }}
               styles={{
                 item: {

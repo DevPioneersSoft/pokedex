@@ -2,25 +2,40 @@ import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type { Pokemon } from "../../../layout/components/Pokemon";
 import api from "../../../shared/utils/api";
 import { useState } from "react";
+import { useUserStore } from "../../../layout/store/userStore";
 
 const useFavoritos = () => {
   const [favoritos, setFavoritos] = useState<number[]>([]);
   const queryClient = useQueryClient();
+  const { usuario } = useUserStore();
 
   const query = useQuery({
     queryKey: ["favoritos"],
     queryFn: async () => {
+      // Si no hay usuario, retorna lista vacía
+      if (!usuario) {
+        setFavoritos([]);
+        return [];
+      }
+      
       await new Promise((resolve) => setTimeout(resolve, 300));
-      const response = await api.get<Pokemon[]>("/usuario/favoritos");
+      const response = await api.get<Pokemon[]>(`/favoritos/usuario/${usuario.id}`);
       setFavoritos(response.data.map(({id}) => id));
       console.log(response.data);
       return response.data;
     },
+    enabled: !!usuario, // Solo ejecuta la query si hay usuario
   });
 
   const agregar = useMutation({
     mutationFn: async (pokemonIds: number[]) => {
-      const response = await api.post("/favorito", pokemonIds.map(id => ({pokemonId: id})));
+      
+      if (!usuario) {
+        setFavoritos([]);
+        return [];
+      }
+
+      const response = await api.put(`/favoritos/usuario/${usuario.id}`, { pokemonIds });
       return response.data;
     },
     onSuccess: () => {
@@ -29,6 +44,11 @@ const useFavoritos = () => {
   });
 
   const toggleFavorito = (pokemon: Pokemon) => {
+    // Si no hay usuario, no hacer nada
+    if (!usuario) {
+      return;
+    }
+    
     let nuevosFavoritos: number[];
     
     if (favoritos.includes(pokemon.id)) {

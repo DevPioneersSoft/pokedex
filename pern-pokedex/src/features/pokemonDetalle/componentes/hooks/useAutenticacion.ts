@@ -7,11 +7,11 @@ export default function useAutenticacion() {
   
   return useMutation({
     mutationFn: async (data: { username: string; contrasena: string }) => {
-      const response = await api.post('/autenticacion', data);
+      const response = await api.post('/usuario/autenticacion', data);
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.usuario);
+      setUser(data);
     }
   });
 }

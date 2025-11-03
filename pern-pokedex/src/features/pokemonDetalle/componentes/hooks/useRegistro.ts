@@ -11,7 +11,7 @@ export default function useRegistro() {
       return response.data;
     },
     onSuccess: (data) => {
-      setUser(data.usuario);
+      setUser(data);
     }
   });
 }

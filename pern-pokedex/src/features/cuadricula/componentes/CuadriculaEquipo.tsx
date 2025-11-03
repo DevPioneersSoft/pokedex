@@ -1,12 +1,12 @@
 import { Container, Grid, Button, Group, Title, TextInput, Stack, Text, Loader } from '@mantine/core'
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useDebouncedValue } from '@mantine/hooks';
 import CardPokemon from './CardPokemon';
 import CardPokemonEquipo from './CardPokemonEquipo';
 import { useBuscarPokemon } from '../../ejemplosHooks/hooks/useBuscarPokemon';
 import useFavoritos from '../../pokemonDetalle/componentes/hooks/useFavoritos';
 import type { Pokemon } from '../../layout/components/Pokemon';
-import useEquipoRegistrar from '../../pokemonDetalle/componentes/hooks/useEquipoRegistrar';
+import useEquipoRegistrar, { useAgregarPokemonEquipo, useEliminarPokemonEquipo, useLimpiarEquipo } from '../../pokemonDetalle/componentes/hooks/useEquipoRegistrar';
 import { DragDropContext, Droppable, Draggable } from "@hello-pangea/dnd";
 import useEquipoUsuario from '../../pokemonDetalle/componentes/hooks/useEquipoUsuario';
 import { useUserStore } from '../../layout/store/userStore';
@@ -14,19 +14,35 @@ import { useUserStore } from '../../layout/store/userStore';
 export default function CuadriculaEquipo() {
 
   const [busqueda, setBusqueda] = useState('');
-  const [debouncedBusqueda] = useDebouncedValue(busqueda, 500); // Espera 500ms después de que el usuario deje de escribir
+  const [debouncedBusqueda] = useDebouncedValue(busqueda, 1000); // Espera 1000ms después de que el usuario deje de escribir
   const [pokemonSeleccionados, setPokemonSeleccionados] = useState<Pokemon[]>([]);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const {favoritos, toggleFavorito} = useFavoritos();
   const { pokemons, cargando, error, refrescando, refetch, nextPage, prevPage, searchPokemon, paginaActual, totalPaginas, hasNextPage, hasPreviousPage } = useBuscarPokemon({ favoritos });
   const equipoMutation = useEquipoRegistrar();
+  const agregarPokemonMutation = useAgregarPokemonEquipo();
+  const eliminarPokemonMutation = useEliminarPokemonEquipo();
+  const limpiarEquipoMutation = useLimpiarEquipo();
   const equipoUsuario = useEquipoUsuario();
   const setEquipoPokemon = useUserStore(state => state.setEquipoPokemon);
 
   useEffect(() => {
     equipoUsuario.mutate(undefined, {
       onSuccess: (data) => {
-        setPokemonSeleccionados(data);
-        setEquipoPokemon(data);
+        console.log('Datos del equipo cargados:', data);
+        if (Array.isArray(data)) {
+          setPokemonSeleccionados(data);
+          setEquipoPokemon(data);
+        } else {
+          console.error('Los datos del equipo no son un array:', data);
+          setPokemonSeleccionados([]);
+          setEquipoPokemon([]);
+        }
+      },
+      onError: (error) => {
+        console.error('Error al cargar el equipo:', error);
+        setPokemonSeleccionados([]);
+        setEquipoPokemon([]);
       }
     });
   }, []);
@@ -35,16 +51,55 @@ export default function CuadriculaEquipo() {
     setEquipoPokemon(pokemonSeleccionados);
   }, [pokemonSeleccionados, setEquipoPokemon]);
 
+  // Focus en el input de búsqueda cuando se monta o refresca el componente
+  useEffect(() => {
+    if (searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [refrescando]);
+
   const agregarALista = (pokemon: Pokemon) => {
-    setPokemonSeleccionados(prev => {
-      const yaExiste = prev.find(p => p.id === pokemon.id);
-      if (yaExiste) {
-        return prev.filter(p => p.id !== pokemon.id);
-      } else {
-        if(prev.length >= 6) return prev;
-        return [...prev, pokemon];
-      }
-    });
+    const yaExiste = pokemonSeleccionados.find(p => p.id === pokemon.id);
+    
+    if (yaExiste) {
+      // Si ya existe, lo removemos usando el endpoint DELETE
+      eliminarPokemonMutation.mutate(pokemon.id, {
+        onSuccess: (data: Pokemon[]) => {
+          console.log('Datos recibidos del servidor tras eliminación:', data);
+          if (Array.isArray(data)) {
+            setPokemonSeleccionados(data);
+            setEquipoPokemon(data);
+            console.log('Pokémon eliminado exitosamente. Equipo actualizado:', data);
+          } else {
+            console.error('La respuesta del servidor no es un array:', data);
+            alert('Error: La respuesta del servidor no tiene el formato esperado');
+          }
+        },
+        onError: (error) => {
+          console.error('Error al eliminar Pokémon del equipo:', error);
+          alert('Error al eliminar el Pokémon del equipo. Inténtalo de nuevo.');
+        }
+      });
+    } else {
+      // Si no existe, lo agregamos usando el endpoint POST
+      agregarPokemonMutation.mutate(pokemon.id, {
+        onSuccess: (data: Pokemon[]) => {
+          console.log('Datos recibidos del servidor:', data);
+          if (Array.isArray(data)) {
+            setPokemonSeleccionados(data);
+            setEquipoPokemon(data);
+            console.log('Pokémon agregado exitosamente. Equipo actualizado:', data);
+          } else {
+            console.error('La respuesta del servidor no es un array:', data);
+            alert('Error: La respuesta del servidor no tiene el formato esperado');
+          }
+        },
+        onError: (error) => {
+          console.error('Error al agregar Pokémon al equipo:', error);
+          alert('Error al agregar el Pokémon al equipo. Inténtalo de nuevo.');
+        }
+      });
+    }
   };
 
   const enviarEquipo = () => {
@@ -68,16 +123,53 @@ export default function CuadriculaEquipo() {
   };
 
   const removerDeLista = (pokemonId: number) => {
-    setPokemonSeleccionados(prev => prev.filter(p => p.id !== pokemonId));
+    // Llamamos al endpoint para eliminar el Pokémon del equipo
+    eliminarPokemonMutation.mutate(pokemonId, {
+      onSuccess: (data: Pokemon[]) => {
+        // La respuesta es la lista completa del equipo actualizada
+        console.log('Datos recibidos del servidor tras eliminación:', data);
+        if (Array.isArray(data)) {
+          setPokemonSeleccionados(data);
+          setEquipoPokemon(data);
+          console.log('Pokémon eliminado exitosamente. Equipo actualizado:', data);
+        } else {
+          console.error('La respuesta del servidor no es un array:', data);
+          alert('Error: La respuesta del servidor no tiene el formato esperado');
+        }
+      },
+      onError: (error) => {
+        console.error('Error al eliminar Pokémon del equipo:', error);
+        alert('Error al eliminar el Pokémon del equipo. Inténtalo de nuevo.');
+      }
+    });
   };
 
   const limpiarLista = () => {
-    setPokemonSeleccionados([]);
+    // Llamamos al endpoint para eliminar todo el equipo
+    limpiarEquipoMutation.mutate(undefined, {
+      onSuccess: (data) => {
+        // Limpiamos el estado local después de la respuesta exitosa
+        setPokemonSeleccionados([]);
+        setEquipoPokemon([]);
+        console.log('Equipo limpiado exitosamente:', data);
+        alert(`¡Equipo limpiado! ${data.pokemonRemovidos} Pokémon eliminados.`);
+      },
+      onError: (error) => {
+        console.error('Error al limpiar el equipo:', error);
+        alert('Error al limpiar el equipo. Inténtalo de nuevo.');
+      }
+    });
   };
 
   useEffect(() => {
     searchPokemon(debouncedBusqueda);
   }, [debouncedBusqueda]);
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      searchPokemon(busqueda);
+    }
+  };
 
   if (cargando || refrescando) {
     return (
@@ -146,9 +238,11 @@ export default function CuadriculaEquipo() {
             <Group gap="md" wrap="nowrap">
               <Title order={2} style={{ flexShrink: 0 }}>Pokédex</Title>
               <TextInput
+                ref={searchInputRef}
                 placeholder="Buscar Pokémon..."
                 value={busqueda}
                 onChange={(e) => setBusqueda(e.currentTarget.value)}
+                onKeyDown={handleKeyPress}
                 size="md"
                 style={{ flex: 1 }}
               />
@@ -208,14 +302,14 @@ export default function CuadriculaEquipo() {
           }}>
             <Group justify="space-between">
               <Title order={3} c="white">Equipo Seleccionado</Title>
-              {pokemonSeleccionados.length > 0 && (
+              {Array.isArray(pokemonSeleccionados) && pokemonSeleccionados.length > 0 && (
                 <Button size="xs" variant="subtle" color="primary" onClick={limpiarLista}>
                   Limpiar Lista
                 </Button>
               )}
             </Group>
             
-            {pokemonSeleccionados.length === 0 ? (
+            {!Array.isArray(pokemonSeleccionados) || pokemonSeleccionados.length === 0 ? (
               <Text size="sm" c="white" ta="center" style={{ marginTop: '2rem' }}>
                 Haz clic en un Pokémon para agregarlo a tu equipo
               </Text>
@@ -229,7 +323,7 @@ export default function CuadriculaEquipo() {
                         ref={provided.innerRef}
                         style={getListStyle(snapshot.isDraggingOver)}
                       >
-                        {pokemonSeleccionados.map((pokemon, index) => (
+                        {Array.isArray(pokemonSeleccionados) && pokemonSeleccionados.map((pokemon, index) => (
                           <Draggable key={pokemon.id} draggableId={pokemon.id.toString()} index={index}>
                             {(provided, snapshot) => (
                               <div
@@ -258,7 +352,7 @@ export default function CuadriculaEquipo() {
               </Stack>
             )}
             
-            {pokemonSeleccionados.length > 0 && (
+            {Array.isArray(pokemonSeleccionados) && pokemonSeleccionados.length > 0 && (
               <Stack gap="sm">
                 <Text size="sm" c="white" ta="center">
                   {pokemonSeleccionados.length} Pokémon en tu equipo

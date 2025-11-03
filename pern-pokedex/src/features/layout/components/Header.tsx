@@ -7,25 +7,33 @@ import { Avatar, Group } from "@mantine/core";
 export default function Header() {
     const navigate = useNavigate();
     const equipoPokemon = useUserStore(state => state.equipoPokemon);
+    const usuario = useUserStore(state => state.usuario);
     
   return (
     <div className='mb-10'>
         <div className="grid grid-cols-2">
             <div className="flex justify-center">
-                <img src="/pokedex-logo.png" alt="Pokedex Logo" className="w-70 h-auto"/>
+                <img 
+                    src="/pokedex-logo.png" 
+                    alt="Pokedex Logo" 
+                    className="w-70 h-auto cursor-pointer hover:opacity-80 transition-opacity duration-200"
+                    onClick={() => navigate('/')}
+                />
             </div>
             <div className="flex shadow-2xl p-2 rounded-2xl border-b-1 border-white grow">
                 <div className="grow">
                     <div className="flex space-x-10">
-                        <div>
-                            <ButtonCustom
-                                label="Mi equipo"
-                                color="warning"
-                                className="ml-10"
-                                isLoading={false}
-                                onClick={ () => {navigate('/mi-equipo')} }  
-                            />  
-                        </div>
+                        {usuario && (
+                            <div>
+                                <ButtonCustom
+                                    label="Mi equipo"
+                                    color="warning"
+                                    className="ml-10"
+                                    isLoading={false}
+                                    onClick={ () => {navigate('/mi-equipo')} }  
+                                />  
+                            </div>
+                        )}
                         <div className="flex space-x-4 items-center">
                             {equipoPokemon.length > 0 && (
                                 <Group gap="xs">
