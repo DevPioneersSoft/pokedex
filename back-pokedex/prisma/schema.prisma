@@ -1,0 +1,79 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Pokemon {
+  id              Int         @id //@default(autoincrement())
+  nombre          String      @db.VarChar(250)
+  descripcion     String      @db.Text
+  types           String      @db.Text
+  grunido         String      @db.VarChar(500)
+  imagen          String      @db.VarChar(500)
+  vida            Int?
+  ataque          Int?
+  defensa         Int?
+  ataqueEspecial  Int?        @map("ataque_especial")
+  defensaEspecial Int?        @map("defensa_especial")
+  velocidad       Int?
+  tipoPokemon     tipoPokemon[] 
+  usuarioFavorito Usuario[] @relation("favoritos")
+  equipos         EquipoPokemon[]
+
+  @@map("pokemon") // Nombre de la tabla en la base de datos
+}
+
+model tipoPokemon {
+  id       Int       @id @default(autoincrement())
+  nombre   String    @unique @db.VarChar(255)
+  pokemons Pokemon[] 
+
+  @@map("tipo_pokemon") // Nombre de la tabla en la base de datos
+}
+
+model Usuario {
+  id         Int      @id @default(autoincrement())
+  username   String   @unique @db.VarChar(100)
+  contrasena String   @db.VarChar(255)
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+  favoritos  Pokemon[] @relation("favoritos")
+  equipo     EquipoPokemon[]
+
+  @@map("usuario") // Nombre de la tabla en la base de datos
+}
+
+model EquipoPokemon {
+  id        Int      @id @default(autoincrement())
+  usuario   Usuario  @relation(fields: [usuarioId], references: [id], onDelete: Cascade)
+  usuarioId Int      @map("usuario_id")
+  pokemon   Pokemon  @relation(fields: [pokemonId], references: [id])
+  pokemonId Int      @map("pokemon_id")
+  posicion  Int      // Posición en el equipo (1-6)
+  esLider   Boolean  @default(false) @map("es_lider") // Si es el Pokémon líder del equipo
+  createdAt DateTime @default(now()) @map("created_at")
+  @@map("equipo_pokemon")
+}
+
+// model PokemonTipo {
+//   id            Int          @id @default(autoincrement())
+//   pokemon       Pokemon      @relation(fields: [pokemonId], references: [id])
+//   pokemonId     Int
+//   tipoPokemon   tipoPokemon   @relation(fields: [tipoPokemonId], references: [id])
+//   tipoPokemonId Int
+
+//   @@unique([pokemonId, tipoPokemonId])
+//   @@map("pokemon_tipo")
+// }
