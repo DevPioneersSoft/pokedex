@@ -32,10 +32,6 @@ import { JwtGuard } from './autenticacion/guard/jwt.guard';
       provide: 'APP_INTERCEPTOR',
       useClass: LoggingInterceptor,
     },
-    {
-      provide: 'APP_GUARD',
-      useClass: JwtGuard,
-    },
   ],
 })
 export class AppModule {}
