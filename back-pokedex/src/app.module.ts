@@ -6,6 +6,8 @@ import { PrismaService } from './prisma/prisma.service';
 import { UsuarioModule } from './usuario/usuario.module';
 import { FavoritosDto } from './usuario/dto/favoritos.dto';
 import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
+import { EquipoModule } from './equipo/equipo.module';
+import { AutenticacionModule } from './autenticacion/autenticacion.module';
 
 @Module({
   imports: [
@@ -15,6 +17,8 @@ import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
     PokemonModule,
     ImportarPokemonesModule,
     UsuarioModule,
+    EquipoModule,
+    AutenticacionModule,
   ],
   controllers: [],
   providers: [

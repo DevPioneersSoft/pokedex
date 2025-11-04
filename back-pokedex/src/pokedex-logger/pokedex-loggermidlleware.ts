@@ -11,7 +11,7 @@ export class PokedexLoggerMiddleware implements NestMiddleware{
         req[' shinyFound '] = chance === 1;
 
         if(req['shinyFound']){
-            console.log(" PARECIO UN SHINY")
+            console.log(" APARECIO UN SHINY")
         }
         next();
     }

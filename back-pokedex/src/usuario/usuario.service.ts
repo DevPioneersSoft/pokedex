@@ -1,12 +1,15 @@
-import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
-import * as argon2 from "argon2";
+import {
+  ConflictException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
+import * as argon2 from 'argon2';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 
 @Injectable()
 export class UsuarioService {
-
   private config: argon2.Options;
 
   constructor(private readonly prisma: PrismaService) {
@@ -20,18 +23,19 @@ export class UsuarioService {
 
   async create(data: CreateUsuarioDto) {
     try {
-
       if (data.contrasena) {
         const hash = await argon2.hash(data.contrasena, this.config);
         data.contrasena = hash;
       }
 
       return await this.prisma.usuario.create({
-        data
-      })
+        data,
+      });
     } catch (error) {
       if (error.code === 'P2002') {
-        throw new ConflictException(`Ya existe un usuario con ese el nombre de usuario: ${data.username}`)
+        throw new ConflictException(
+          `Ya existe un usuario con ese el nombre de usuario: ${data.username}`,
+        );
       }
     }
   }
@@ -48,8 +52,20 @@ export class UsuarioService {
     try {
       return await this.prisma.usuario.findUnique({
         where: {
-          id
-        }
+          id,
+        },
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  async findByUsername(username: string) {
+    try {
+      return await this.prisma.usuario.findUnique({
+        where: {
+          username,
+        },
       });
     } catch (error) {
       throw error;
@@ -58,7 +74,6 @@ export class UsuarioService {
 
   async update(id: number, data: UpdateUsuarioDto) {
     try {
-
       if (data.contrasena) {
         const hash = await argon2.hash(data.contrasena, this.config);
         data.contrasena = hash;
@@ -66,10 +81,10 @@ export class UsuarioService {
 
       return await this.prisma.usuario.update({
         where: {
-          id
+          id,
         },
-        data
-      })
+        data,
+      });
     } catch (error) {
       throw error;
     }
@@ -79,12 +94,12 @@ export class UsuarioService {
     try {
       return await this.prisma.usuario.delete({
         where: {
-          id
-        }
-      })
+          id,
+        },
+      });
     } catch (error) {
       if (error.code === 'P2025') {
-        throw new NotFoundException(`No se encontró el usuario con id: ${id}`)
+        throw new NotFoundException(`No se encontró el usuario con id: ${id}`);
       }
       throw error;
     }

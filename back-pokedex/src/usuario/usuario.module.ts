@@ -7,5 +7,6 @@ import { FavoritosService } from 'src/favoritos/favoritosservice';
 @Module({
   controllers: [UsuarioController],
   providers: [UsuarioService, PrismaService, FavoritosService],
+  exports: [UsuarioService]
 })
 export class UsuarioModule {}
