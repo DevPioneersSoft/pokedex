@@ -5,6 +5,6 @@ import { ImportarPokemonesService } from './importar-pokemones.service';
 
 @Module({
   controllers: [ImportarPokemonesController],
-  providers: [ImportarPokemonesService, PrismaService],
+  providers: [ImportarPokemonesService],
 })
 export class ImportarPokemonesModule { }

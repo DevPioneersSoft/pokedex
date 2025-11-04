@@ -1,34 +1,21 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import { Controller } from '@nestjs/common';
 import { EquipoService } from './equipo.service';
-import { CreateEquipoDto } from './dto/create-equipo.dto';
-import { UpdateEquipoDto } from './dto/update-equipo.dto';
 
 @Controller('equipo')
 export class EquipoController {
-  constructor(private readonly equipoService: EquipoService) {}
 
-  @Post()
-  create(@Body() createEquipoDto: CreateEquipoDto) {
-    return this.equipoService.create(createEquipoDto);
-  }
+  constructor(private readonly equipoService: EquipoService) { }
 
-  @Get()
-  findAll() {
-    return this.equipoService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.equipoService.findOne(+id);
-  }
-
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateEquipoDto: UpdateEquipoDto) {
-    return this.equipoService.update(+id, updateEquipoDto);
-  }
-
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.equipoService.remove(+id);
-  }
+  // @Post()
+  // @UseGuards(JwtAuthGuard)
+  // @ApiOperation({
+  //   summary: 'Actualiza el equipo de pokémon del usuario',
+  //   description: 'Recibe una lista de IDs de pokémon y actualiza el equipo del usuario, permitiendo un máximo de 6 pokémon'
+  // })
+  // upsert(@Body() body: UpsertEquipoDto[], @Request() req) {
+  //   if (body.length > 6) {
+  //     throw new BadRequestException('El equipo no puede tener más de 6 pokemons');
+  //   }
+  //   return this.equipoService.upsert(body, req.user, req.shinyFound);
+  // }
 }
