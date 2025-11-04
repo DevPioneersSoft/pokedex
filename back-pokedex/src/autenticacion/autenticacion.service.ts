@@ -10,14 +10,13 @@ import { Payload } from './entities/payload';
 
 @Injectable()
 export class AutenticacionService {
-
-  constructor(private usuarioService: UsuarioService,
+  constructor(
+    private usuarioService: UsuarioService,
     private config: ConfigService,
-    private jwtService: JwtService
-  ) { }
+    private jwtService: JwtService,
+  ) {}
 
   async validarUsuario(username: string, pass: string) {
-
     const user = await this.usuarioService.findByUsername(username);
 
     if (user) {
@@ -41,30 +40,30 @@ export class AutenticacionService {
 
     const token = this.jwtService.sign(payload, {
       secret,
-      expiresIn
+      expiresIn,
     });
 
     response.cookie('Authentication', token, {
       httpOnly: true,
       secure: enviroment === 'production',
-      maxAge: ms(`${expiresIn}`)
-    })
+      maxAge: ms(`${expiresIn}`),
+    });
 
     const refresh = this.jwtService.sign(payload, {
       secret: refreshSecret,
-      expiresIn: expiresRefreshIn
+      expiresIn: expiresRefreshIn,
     });
 
     response.cookie('Refresh', refresh, {
       httpOnly: true,
       secure: enviroment === 'production',
-      maxAge: ms(`${expiresRefreshIn}`)
-    })
+      maxAge: ms(`${expiresRefreshIn}`),
+    });
 
-    return { payload }
+    return { payload };
   }
 
   getPayload({ id, username }: Usuario): Payload {
-    return { id, username, sub: id, };
+    return { id, username, sub: id };
   }
 }

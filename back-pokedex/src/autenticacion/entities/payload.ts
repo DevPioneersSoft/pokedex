@@ -1,5 +1,5 @@
 export class Payload {
-    id: number;
-    username: string;
-    sub: number;
+  id: number;
+  username: string;
+  sub: number;
 }

@@ -10,6 +10,7 @@ import { UsuarioModule } from './usuario/usuario.module';
 import { EquipoModule } from './equipo/equipo.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
+import { JwtGuard } from './autenticacion/guard/jwt.guard';
 
 @Module({
   imports: [
@@ -31,6 +32,10 @@ import { AutenticacionModule } from './autenticacion/autenticacion.module';
       provide: 'APP_INTERCEPTOR',
       useClass: LoggingInterceptor,
     },
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtGuard,
+    },
   ],
 })
-export class AppModule { }
+export class AppModule {}
