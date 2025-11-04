@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { CreateEquipoDto } from './dto/create-equipo.dto';
 import { UpdateEquipoDto } from './dto/update-equipo.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
+import { EquipoDto } from 'src/usuario/dto/equipo.dto';
 
 @Injectable()
 export class EquipoService {
-  create(createEquipoDto: CreateEquipoDto) {
-    return 'This action adds a new equipo';
-  }
 
-  findAll() {
-    return `This action returns all equipo`;
-  }
+    constructor(private prisma: PrismaService) { }
+    private logger = new Logger(EquipoService.name);
 
-  findOne(id: number) {
-    return `This action returns a #${id} equipo`;
-  }
+    async actualizarEquipo(dto: EquipoDto): Promise<void> {
+        const { pokemones, userId, nombreEquipo } = dto;
+        this.logger.log(`actualizando favoritos para el usuario ${userId}: ${JSON.stringify(pokemones)}`)
+        // 1️Buscar si el usuario ya tiene un equipo
+        let equipo = await this.prisma.equipo.findFirst({
+            where: { id_usuario: userId },
+        });
 
-  update(id: number, updateEquipoDto: UpdateEquipoDto) {
-    return `This action updates a #${id} equipo`;
-  }
+        if (!equipo) {
+            this.logger.warn(`No se encontró equipo para el usuario ${userId}, creando uno nuevo...`);
+            equipo = await this.prisma.equipo.create({
+                data: {
+                    id_usuario: userId,
+                    nombreEquipo: nombreEquipo,
+                    pokemones: {
+                        connect: pokemones.map((id) => ({ id }))
+                    }
+                }
+            });
+            this.logger.log(`✅ Equipo creado para usuario ${userId} con pokemones ${JSON.stringify(pokemones)}`);
+            return;
+        }
+        // Si ya existe, actualizar su lista de pokemones
+        await this.prisma.equipo.update({
+            where: { id: equipo.id },
+            data: {
+                pokemones: {
+                    set: pokemones.map((id) => ({ id })), // reemplaza los actuales
+                },
+            },
+        });
 
-  remove(id: number) {
-    return `This action removes a #${id} equipo`;
-  }
+        this.logger.log(`✅ Equipo actualizado para el usuario ${userId}`);
+    }
 }

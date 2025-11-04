@@ -19,10 +19,10 @@ import { JwtGuard } from './autenticacion/guard/jst.guard';
     provide: 'APP_LOGGINS_INTERCEPTOR', //// esta es la forma mas apropieda apra usar el interceptor segun la documentacion.
     useClass: LoggingInterceptor
   },
-    {
-      provide: 'APP_GUARD',
-      useClass: JwtGuard
-    }
+    // {
+    //   provide: 'APP_GUARD', //// esta es la configuracion que habilita que las urls esten autentificadas
+    //   useClass: JwtGuard
+    // }
 
   ],
 })

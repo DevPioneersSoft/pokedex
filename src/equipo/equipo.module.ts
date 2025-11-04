@@ -3,10 +3,12 @@ import { EquipoService } from './equipo.service';
 import { EquipoController } from './equipo.controller';
 import { ShinyMiddleware } from 'src/shiny/shiny.middleware';
 import path from 'path';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Module({
+  imports:[],
   controllers: [EquipoController],
-  providers: [EquipoService],
+  providers: [EquipoService,PrismaService],
 })
 export class EquipoModule {
 

@@ -6,12 +6,15 @@ import { ApiOperation } from '@nestjs/swagger';
 import { FavoritosDto } from './dto/favoritos.dto';
 import { FavoritosService } from 'src/favoritos/favoritos.service';
 import { LoggingInterceptor } from 'src/shared/interceptor/logging.interceptor';
+import { EquipoDto } from './dto/equipo.dto';
+import { EquipoService } from 'src/equipo/equipo.service';
 
 @Controller('usuario')
 export class UsuarioController {
   constructor(
     private readonly usuarioService: UsuarioService,
     private readonly favoritoService: FavoritosService,
+    private readonly equipoService: EquipoService,
   ) {}
 
   @Post()
@@ -47,5 +50,15 @@ export class UsuarioController {
   @Delete(':id')
   remove(@Param('id') id: string) {
     return this.usuarioService.remove(+id);
+  }
+
+  @Post("/equipo")
+  @UseInterceptors(LoggingInterceptor)
+  @ApiOperation({
+    summary: "Actualiza el equipo del usuario",
+    description: "Recibre una lista de IDs de pokemon y actualiza el equipo del usuario"
+  })
+  updateEquipo(@Body() body: EquipoDto){
+    return  this.equipoService.actualizarEquipo(body)
   }
 }

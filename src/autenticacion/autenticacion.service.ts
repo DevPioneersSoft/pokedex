@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { UsuarioService } from 'src/usuario/usuario.service';
 import  * as argon from 'argon2';
 import { Usuario } from 'src/usuario/entities/usuario.entity';
@@ -14,10 +14,10 @@ export class AutenticacionService {
     private config:ConfigService,
     private jwtService : JwtService
   ){}
-
+private logger =  new Logger(AutenticacionService.name);
   async validarUsuario(usarname:string, pass:string){
     const usr =  await this.usuarioService.findByUsername(usarname);
-
+    this.logger.log(usr)
     if(usr){
       if(usr.contrasena){
         if(await argon.verify(usr.contrasena,pass)){
