@@ -33,8 +33,16 @@ export class UsuarioService {
     }
   }
 
+
   findAll() {
     return this.prisma.usuario.findMany();
+  }
+
+  async findByUsername(username: string) {
+    return this.prisma.usuario.findUnique({
+      where: { username },
+      include: { favoritos: true },
+    });
   }
 
   findOne(id: number) {
