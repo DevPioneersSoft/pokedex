@@ -42,7 +42,12 @@ export class UsuarioService {
     try {
       return await this.prisma.usuario.findMany({
         include:{
-          favoritos: true
+          favoritos: true,
+           equipos:{
+            include:{
+              pokemones: true
+            }
+          }
         }
       });
     } catch (error) {
@@ -57,8 +62,25 @@ export class UsuarioService {
           id
         },
         include:{
-          favoritos: true
+          favoritos: true,
+          equipos:{
+            include:{              
+              pokemones: true
+            }
+          }
         }        
+      });
+    } catch (error) {
+      throw error;
+    }
+  }
+
+   async findByUserName(username: string){
+    try {
+      return await this.prisma.usuario.findUnique({
+        where: {
+          username
+        }
       });
     } catch (error) {
       throw error;

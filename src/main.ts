@@ -5,6 +5,7 @@ import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
 import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
 import { PokedexLoggerMiddleware } from './pokedex-logger/pokedex.logger.middleware';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -30,6 +31,12 @@ async function bootstrap() {
   app.use('/docs',apiReference({
     content
   }))
+
+  app.use(cookieParser())
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credentials:true
+  })
 
   await app.listen(process.env.PORT ?? 3000);
 }

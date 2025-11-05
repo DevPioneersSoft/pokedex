@@ -49,7 +49,7 @@ model usuario{
 model equipo{
    id Int @id @default(autoincrement())   
    id_usuario Int
-   nombre String @unique @db.VarChar(255)   
+   nombre String @db.VarChar(255)   
    pokemones  pokemon[] @relation("pokemon_equipo")
    usuario usuario   @relation(fields: [id_usuario], references: [id])
 }

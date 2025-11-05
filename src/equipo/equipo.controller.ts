@@ -11,8 +11,7 @@ export class EquipoController {
   constructor(private readonly equipoService: EquipoService) {}
 
   @Post()
-  create(@Body() data: EquipoPrueba2Dto) {
-    console.log("CONTROLADOR================")
+  create(@Body() data: EquipoPrueba2Dto) {    
     return this.equipoService.create(data);
   }
 
