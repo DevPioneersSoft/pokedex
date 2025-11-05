@@ -1,13 +1,14 @@
-import { Controller, Post, Res, Request, UseGuards, Get } from '@nestjs/common';
-import { AutenticacionService } from './autenticacion.service';
-import { LocalAuthGuard } from './guard/local.guard';
+import { Controller, Get, Post, Request, Res, UseGuards } from '@nestjs/common';
 import type { Response } from 'express';
 import { Public } from '../shared/decorator/public.decorator';
+import { AutenticacionService } from './autenticacion.service';
+import { JwtRefreshAuthGuard } from './guard/jwt-refresh-auth.guard';
 import { JwtGuard } from './guard/jwt.guard';
+import { LocalAuthGuard } from './guard/local.guard';
 
 @Controller('autenticacion')
 export class AutenticacionController {
-  constructor(private readonly autenticacionService: AutenticacionService) {}
+  constructor(private readonly autenticacionService: AutenticacionService) { }
 
   @Public()
   @UseGuards(LocalAuthGuard)
@@ -16,17 +17,22 @@ export class AutenticacionController {
     return this.autenticacionService.login(req.user, response);
   }
 
-  @Public()
   @Get('algo')
-  @UseGuards(JwtGuard)
   prueba() {
     return 'protegido';
   }
 
   @Public()
+  @UseGuards(JwtRefreshAuthGuard)
+  @Post('/refresh')
+  refresh(@Request() req, @Res({ passthrough: true }) response: Response) {
+    return this.autenticacionService.refresh(req.user, response);
+  }
+
+  @Public()
   @Post('/logout')
-  logout() {
-    // Implementar logout si es necesario
-    console.log('Logout no implementado');
+  logout(@Res({ passthrough: true }) response: Response) {
+    response.clearCookie("Authentication")
+    response.clearCookie("Refresh", { path: '/autenticacion/refresh' })
   }
 }

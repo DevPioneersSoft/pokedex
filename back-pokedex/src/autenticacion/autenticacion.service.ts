@@ -14,7 +14,7 @@ export class AutenticacionService {
     private usuarioService: UsuarioService,
     private config: ConfigService,
     private jwtService: JwtService,
-  ) {}
+  ) { }
 
   async validarUsuario(username: string, pass: string) {
     const user = await this.usuarioService.findByUsername(username);
@@ -54,13 +54,38 @@ export class AutenticacionService {
       expiresIn: expiresRefreshIn,
     });
 
-    response.cookie('Refresh', refresh, {
-      httpOnly: true,
-      secure: enviroment === 'production',
-      maxAge: ms(`${expiresRefreshIn}`),
-    });
+    response.cookie('Refresh', refresh,
+      {
+        httpOnly: true,
+        secure: enviroment === 'production',
+        maxAge: ms(`${expiresRefreshIn}`),
+        path: '/autenticacion/refresh'
+      }
+    );
 
     return { payload };
+  }
+
+  async refresh(usuario: Payload, response: Response) {
+
+    const { id, sub, username } = usuario;
+
+    const secret = this.config.get('JWT_SECRET');
+    const expiresIn = this.config.get('JWT_EXPIRES_IN')!;
+    const enviroment = this.config.get('NODE_ENV');
+
+    const token = this.jwtService.sign({ id, sub, username }, {
+      secret,
+      expiresIn
+    });
+
+    response.cookie('Authentication', token, {
+      httpOnly: true,
+      secure: enviroment === 'production',
+      maxAge: ms(`${expiresIn}`),
+    });
+
+    return { usuario };
   }
 
   getPayload({ id, username }: Usuario): Payload {

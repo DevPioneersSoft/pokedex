@@ -7,11 +7,13 @@ import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
 import { FavoritosDto } from './usuario/dto/favoritos.dto';
 import { UsuarioModule } from './usuario/usuario.module';
 // import { FavoritosService } from './favoritos/favoritos.service';
-import { EquipoModule } from './equipo/equipo.module';
-import { PrismaModule } from './prisma/prisma.module';
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { JwtGuard } from './autenticacion/guard/jwt.guard';
+import { ConfigurationModule } from './configuration/configuration.module';
 import { validate } from './configuration/env.validation';
+import { EquipoModule } from './equipo/equipo.module';
+import { PrismaModule } from './prisma/prisma.module';
+import { APP_INTERCEPTOR, APP_GUARD } from '@nestjs/core';
 
 @Module({
   imports: [
@@ -26,19 +28,20 @@ import { validate } from './configuration/env.validation';
     UsuarioModule,
     EquipoModule,
     AutenticacionModule,
+    ConfigurationModule,
   ],
   controllers: [],
   providers: [
     PrismaService,
     FavoritosDto,
     {
-      provide: 'APP_INTERCEPTOR',
+      provide: APP_INTERCEPTOR,
       useClass: LoggingInterceptor,
     },
     {
-      provide: 'APP_GUARD',
+      provide: APP_GUARD,
       useClass: JwtGuard,
     },
   ],
 })
-export class AppModule {}
+export class AppModule { }

@@ -2,6 +2,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
+import cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { PokedexLoggerMiddleware } from './pokedex-logger/pokedex-logger.middleware';
 
@@ -31,6 +32,13 @@ async function bootstrap() {
       content,
     }),
   );
+
+  app.use(cookieParser());
+
+  app.enableCors({
+    origin: ['http://localhost:5173'],
+    credentials: true
+  })
 
   await app.listen(process.env.PORT ?? 3000);
 }
