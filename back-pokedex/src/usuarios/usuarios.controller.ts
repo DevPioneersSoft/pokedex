@@ -1,10 +1,11 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Query, UseGuards } from '@nestjs/common';
 import { UsuariosService } from './usuarios.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
 import { AutenticarUsuarioDto } from './dto/autenticar-usuario.dto';
 import { PrismaQueryParamsDto } from '../shared/dto/prisma-query-params-dto';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiTags, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtGuard } from '../autenticacion/guard/jwt.guard';
 import { 
   ApiCrearUsuario,
   ApiObtenerUsuarios,
@@ -13,6 +14,7 @@ import {
   ApiEliminarUsuario,
   ApiAutenticarUsuario
 } from './decorators/api-usuarios-decorator';
+import { Public } from 'src/autenticacion/decorators/public.decorator';
 
 @ApiTags('Usuarios')
 @Controller('usuario')
@@ -20,6 +22,7 @@ export class UsuariosController {
   constructor(private readonly usuariosService: UsuariosService) {}
 
   @Post()
+  @Public()
   @ApiCrearUsuario()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
     return this.usuariosService.create(createUsuarioDto);

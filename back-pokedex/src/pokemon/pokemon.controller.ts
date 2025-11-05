@@ -7,6 +7,7 @@ import { PrismaQueryParamsDto } from '../shared/dto/prisma-query-params-dto';
 import { ApiPrismaQuery } from 'src/shared/decorators/api-prisma-query-decorator';
 import { ApiPaginatedResponse } from 'src/shared/decorators/paginated-response-decorator';
 import { PokemonEntity } from './entities/pokemon.entity';
+import { Public } from 'src/autenticacion/decorators/public.decorator';
 
 @ApiTags('Pokemon')
 @Controller('pokemon')
@@ -22,6 +23,8 @@ export class PokemonController {
   }
 
   @Get()
+  @Public()
+  @ApiOperation({ summary: 'Get all pokemons' })
   @ApiPrismaQuery()
   @ApiPaginatedResponse(PokemonEntity)
   findAll(@Query() query: PrismaQueryParamsDto) {
@@ -29,6 +32,7 @@ export class PokemonController {
   }
 
   @Get(':id')
+  @Public()
   @ApiOperation({ summary: 'Get a pokemon by ID' })
   @ApiParam({ name: 'id', description: 'Pokemon ID' })
   @ApiResponse({ status: 200, description: 'Pokemon found' })

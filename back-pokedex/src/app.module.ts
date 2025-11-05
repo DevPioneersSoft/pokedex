@@ -8,12 +8,18 @@ import { LoggingInterceptor } from './shared/interceptores/logging.interceptor';
 import { EquipoModule } from './equipo/equipo.module';
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { JwtGuard } from './autenticacion/guard/jwt.guard';
+import { validate } from './configuration/env.validation';
+import { ConfigurationModule } from './configuration/configuration.module';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ 
+      isGlobal: true,
+      cache: true,
+      validate  
+    }),
     PokemonModule, 
-    ImportarPokemonModule, UsuariosModule, FavoritosModule, EquipoModule, AutenticacionModule
+    ImportarPokemonModule, UsuariosModule, FavoritosModule, EquipoModule, AutenticacionModule, ConfigurationModule
   ],
   controllers: [],
   providers: [

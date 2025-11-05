@@ -7,5 +7,6 @@ import { PrismaErrorHandlerService } from 'src/utils/prisma-error-handler.servic
 @Module({
   controllers: [UsuariosController],
   providers: [UsuariosService, PrismaService, PrismaErrorHandlerService],
+  exports: [UsuariosService],
 })
 export class UsuariosModule {}

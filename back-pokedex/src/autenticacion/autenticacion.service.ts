@@ -10,7 +10,8 @@ import ms from 'ms';
 @Injectable()
 export class AutenticacionService {
 
-  constructor(private readonly usuariosService: UsuariosService,
+  constructor(
+    private readonly usuariosService: UsuariosService,
     private config: ConfigService,
     private jwtService: JwtService
   ) {}
@@ -28,6 +29,11 @@ export class AutenticacionService {
     const refreshSecret = this.config.get('JWT_REFRESH_SECRET');
     const expiresRefreshIn = this.config.get('JWT_REFRESH_EXPIRES_IN');
     const enviroment = this.config.get('NODE_ENV');
+    console.log('secret', secret);
+    console.log('expiresIn', expiresIn);
+    console.log('refreshSecret', refreshSecret);
+    console.log('expiresRefreshIn', expiresRefreshIn); 
+    console.log('enviroment', enviroment);
 
     const token = this.jwtService.sign(payload, {
       secret,
@@ -51,7 +57,12 @@ export class AutenticacionService {
       maxAge: ms(`${expiresRefreshIn}`),
     });
 
-    return { payload };
+    return { 
+      id: payload.id,
+      username: payload.username,
+      // access_token: token,
+      // refresh_token: refresh
+    };
   }
 
   getPayload({id, username}: UsuarioEntity): Payload {
@@ -62,4 +73,21 @@ export class AutenticacionService {
     };
   }
 
+  async validateUserRefreshToken(id:number, token:string): Promise<Omit<UsuarioEntity, 'contrasena'> | null> {
+    try {
+      const usuario = await this.usuariosService.findOne(id);
+      if(!usuario) {
+        return null;
+      }
+      const payload = this.jwtService.verify(token, {
+        secret: this.config.get('JWT_REFRESH_SECRET'),
+      });
+      if (payload.sub !== id) {
+        throw new Error('Invalid token');
+      }
+      return usuario;
+    } catch (error) {
+      return null;
+    }
+  }
 }

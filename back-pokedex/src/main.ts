@@ -3,9 +3,13 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common/pipes/validation.pipe';
+import cookieParser from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
+  // Configure cookie parser
+  app.use(cookieParser());
 
   // Enable CORS
   app.enableCors({
@@ -38,7 +42,6 @@ async function bootstrap() {
   SwaggerModule.setup('api', app, content);
 
   app.use('/api/docs', apiReference({ content }));
-
 
   await app.listen(process.env.PORT ?? 3000);
   console.log('Application is running on: http://localhost:3000');
