@@ -1,0 +1,45 @@
+
+
+generator client {
+  provider = "prisma-client"
+  output   = "../generated/prisma"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model pokemon {
+  id Int @id
+  nombre String @db.VarChar(255)
+  descripcion String @db.VarChar(255)
+  grunido String @db.VarChar(255)
+  imagen String @db.VarChar(255)
+  vida Int
+  ataque Int
+  defensa Int
+  ataqueEspecial Int @map("ataque_especial")
+  defensaEspecial Int @map("defensa_especial")
+  velocidad Int
+  tipo_pokemon tipo_pokemon[]
+  usuariosFavoritos usuario[] @relation("favoritos")
+  usuariosEquipo usuario[] @relation("equipo")
+}
+
+model tipo_pokemon {
+  id Int @id @default(autoincrement())
+  nombre String @unique @db.VarChar(255)
+  pokemones pokemon[]
+}
+
+model usuario{
+  id Int @id @default(autoincrement())
+  username String @unique @db.VarChar(255)
+  contrasena String @db.VarChar(255)
+  favoritos pokemon[] @relation("favoritos")
+  equipo pokemon[] @relation("equipo")
+}
+
+
