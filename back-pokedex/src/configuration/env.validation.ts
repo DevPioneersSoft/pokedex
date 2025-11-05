@@ -10,7 +10,7 @@ import {
 class EnvironmentVariables {
   @IsString()
   @IsNotEmpty()
-  @Matches(/^postgresql:\/\/[^:]+:[^@]+@[^:]+:\d+\/\w+$/, {
+  @Matches(/^postgresql:\/\/[^:]+:[^@]+@[^:]+:\d+\/\w+.*$/, {
     message: 'La URL de conexión a Postgres no es válida',
   })
   DATABASE_URL: string;

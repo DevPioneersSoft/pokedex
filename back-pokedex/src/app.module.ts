@@ -11,11 +11,14 @@ import { EquipoModule } from './equipo/equipo.module';
 import { PrismaModule } from './prisma/prisma.module';
 import { AutenticacionModule } from './autenticacion/autenticacion.module';
 import { JwtGuard } from './autenticacion/guard/jwt.guard';
+import { validate } from './configuration/env.validation';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      cache: true,
+      validate,
     }),
     PrismaModule,
     PokemonModule,
@@ -31,6 +34,10 @@ import { JwtGuard } from './autenticacion/guard/jwt.guard';
     {
       provide: 'APP_INTERCEPTOR',
       useClass: LoggingInterceptor,
+    },
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtGuard,
     },
   ],
 })

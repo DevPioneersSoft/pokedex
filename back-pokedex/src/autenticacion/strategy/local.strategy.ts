@@ -8,7 +8,7 @@ export class LocalStrategy extends PassportStrategy(Strategy) {
   constructor(private auth: AutenticacionService) {
     super({
       usernameField: 'username',
-      passwordField: 'constrasena',
+      passwordField: 'contrasena',
     });
   }
 
