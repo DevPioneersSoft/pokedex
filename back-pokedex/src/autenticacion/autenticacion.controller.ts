@@ -3,7 +3,6 @@ import type { Response } from 'express';
 import { Public } from '../shared/decorator/public.decorator';
 import { AutenticacionService } from './autenticacion.service';
 import { JwtRefreshAuthGuard } from './guard/jwt-refresh-auth.guard';
-import { JwtGuard } from './guard/jwt.guard';
 import { LocalAuthGuard } from './guard/local.guard';
 
 @Controller('autenticacion')
@@ -17,6 +16,7 @@ export class AutenticacionController {
     return this.autenticacionService.login(req.user, response);
   }
 
+  @Public()
   @Get('algo')
   prueba() {
     return 'protegido';
