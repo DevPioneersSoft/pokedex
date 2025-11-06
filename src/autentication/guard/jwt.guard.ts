@@ -22,7 +22,7 @@ export class JwtGuard extends AuthGuard("jwt"){
 
   handleRequest(error, user){
     if (error || !user){
-        return error || new UnauthorizedException();
+        throw error || new UnauthorizedException();
     }
     return user;
   }

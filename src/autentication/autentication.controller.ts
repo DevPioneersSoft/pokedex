@@ -19,9 +19,9 @@ export class AutenticationController {
     return this.autenticationService.login(req.user, response);
   }
 
- 
+  @Public()
   @UseGuards(JwtGuard)
-  @Get('prueba')
+  @Get('/prueba')
   prueba(){
     return "contenido";
   }
