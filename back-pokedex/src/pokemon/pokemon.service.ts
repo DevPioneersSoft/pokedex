@@ -4,6 +4,9 @@ import { UpdatePokemonDto } from './dto/update-pokemon.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { Pokemon } from './entities/pokemon.entity';
 import { PokemonDto } from './dto/pokemon.dto';
+import { PrismaQueryParamsDto } from 'src/shared/dto/prisma-query-params.dto';
+import { PaginatedResponseDto } from 'src/shared/dto/paginated-response.dto';
+import { buildPaginatedResponse } from 'src/shared/helpers/build-paginated-response';
 
 @Injectable()
 export class PokemonService {
@@ -22,9 +25,29 @@ export class PokemonService {
     }
   }
 
- async findAll() : Promise<Pokemon[]> {
-   try {
-      return this.prisma.pokemon.findMany();
+
+  /* return this.prisma.pokemon.findMany({
+        take: 10,
+        skip: 0,
+        where: {
+          nombre:{
+            contains: 'b'
+          },
+          vida:{
+            gt:45
+          }
+        }
+      }); */
+ async findAll(params: PrismaQueryParamsDto) : Promise<PaginatedResponseDto<Pokemon>> {
+  const {skip, take, where, orderBy} = params; 
+  try {
+    const [data, total] = await Promise.all([
+      this.prisma.pokemon.findMany({skip, take, where, orderBy}),
+      this.prisma.pokemon.count({
+        where
+      })
+    ]);
+    return buildPaginatedResponse({data, total, skip, take});
     } catch (error) {
       throw error;
     }
