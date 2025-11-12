@@ -1,14 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
+import { FavoritosDto } from './dto/favoritos.dto';
 
 @Injectable()
 export class FavoritosService {
+
   constructor(private prisma: PrismaService) {}
 
   async actualizarFavoritos(
-    pokemonesIds: number[],
-    usuarioId: number,
+    dto : FavoritosDto
   ): Promise<void> {
+    const {pokemonesIds, usuarioId} = dto;
     await this.prisma.usuario.update({
       where: { id: usuarioId },
       data: {
@@ -18,4 +20,5 @@ export class FavoritosService {
       },
     });
   }
+  
 }

@@ -2,10 +2,15 @@ import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/commo
 import { UsuarioService } from './usuario.service';
 import { CreateUsuarioDto } from './dto/create-usuario.dto';
 import { UpdateUsuarioDto } from './dto/update-usuario.dto';
+import { FavoritosService } from 'src/favoritos/favoritos.service';
+import { ApiOperation } from '@nestjs/swagger';
+import { FavoritosDto } from 'src/favoritos/dto/favoritos.dto';
 
 @Controller('usuario')
 export class UsuarioController {
-  constructor(private readonly usuarioService: UsuarioService) {}
+  constructor(private readonly usuarioService: UsuarioService,
+    private readonly favoritosService: FavoritosService
+  ) {}
 
   @Post()
   create(@Body() createUsuarioDto: CreateUsuarioDto) {
@@ -31,4 +36,14 @@ export class UsuarioController {
   remove(@Param('id') id: string) {
     return this.usuarioService.remove(+id);
   }
+
+  @Post('/favoritos')
+  @ApiOperation({
+    summary : 'Actualiza la lista de pokemon favoritos del usuario',
+    description : 'Recibe una lista de ids de pokemon y actualiza la lista de favoritos del usuario'
+  })
+  updateFavoritos(@Body() body: FavoritosDto) {
+    return this.favoritosService.actualizarFavoritos(body);
+  }
+
 }

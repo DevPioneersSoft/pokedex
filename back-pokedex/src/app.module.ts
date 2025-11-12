@@ -4,7 +4,8 @@ import { ImportarPokemonesModule } from './importar-pokemones/importar-pokemones
 import { PrismaService } from './prisma/prisma.service';
 import { ConfigModule } from '@nestjs/config';
 import { UsuarioModule } from './usuario/usuario.module';
-import { FavoritosService } from './favoritos/favoritos.service';
+import { LoggingInteceptor } from './shared/interceptores/logging.interceptor';
+import { EquipoModule } from './equipo/equipo.module';
 
 @Module({
   imports: [
@@ -12,9 +13,15 @@ import { FavoritosService } from './favoritos/favoritos.service';
       isGlobal: true
     }),
     PokemonModule, 
-    ImportarPokemonesModule, UsuarioModule
+    ImportarPokemonesModule, 
+    UsuarioModule, EquipoModule
   ],
   controllers: [],
-  providers: [PrismaService, FavoritosService],
+  providers: [PrismaService,
+    {
+      provide : 'APP_INTERCEPTOR',
+      useClass : LoggingInteceptor
+    }
+  ],
 })
 export class AppModule {}

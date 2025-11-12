@@ -29,6 +29,7 @@ model pokemon {
   velocidad       Int
   tipo_pokemon    tipo_pokemon[]
   usuariosFavoritos   usuario[] @relation("favoritos")
+  equipo            equipo[]       @relation("equipo_pokemon")
 }
 
 model tipo_pokemon {
@@ -41,5 +42,16 @@ model usuario {
   id              Int               @id @default(autoincrement())
   username        String            @unique
   contrasena      String          
-  favoritos       pokemon[] @relation("favoritos")  
+  favoritos       pokemon[] @relation("favoritos")
+  equipo          equipo[]  @relation("equipo_usuario")
+}
+
+model equipo {
+  usuarioId Int
+  pokemonId Int
+  shiny     Boolean @default(false)
+  usuario   usuario @relation("equipo_usuario", fields: [usuarioId], references: [id], onDelete: Cascade)
+  pokemon   pokemon @relation("equipo_pokemon", fields: [pokemonId], references: [id], onDelete: Cascade)
+
+  @@id([usuarioId, pokemonId])
 }

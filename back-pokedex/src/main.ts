@@ -3,6 +3,7 @@ import { AppModule } from './app.module';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { apiReference } from '@scalar/nestjs-api-reference';
 import { ValidationPipe } from '@nestjs/common';
+import { PokedexLoggerMiddleware } from './pokedex-logger/pokedex-logger.middleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
@@ -21,6 +22,8 @@ async function bootstrap() {
     .build();
 
     const content = SwaggerModule.createDocument(app, config);
+
+    app.use(new PokedexLoggerMiddleware().use);
 
     app.use('/docs', apiReference({
       content: content
