@@ -6,6 +6,7 @@ import { ConfigModule } from '@nestjs/config';
 import { UsuarioModule } from './usuario/usuario.module';
 import { LoggingInteceptor } from './shared/interceptores/logging.interceptor';
 import { EquipoModule } from './equipo/equipo.module';
+import { AutenticacionModule } from './autenticacion/autenticacion.module';
 
 @Module({
   imports: [
@@ -14,7 +15,7 @@ import { EquipoModule } from './equipo/equipo.module';
     }),
     PokemonModule, 
     ImportarPokemonesModule, 
-    UsuarioModule, EquipoModule
+    UsuarioModule, EquipoModule, AutenticacionModule
   ],
   controllers: [],
   providers: [PrismaService,
